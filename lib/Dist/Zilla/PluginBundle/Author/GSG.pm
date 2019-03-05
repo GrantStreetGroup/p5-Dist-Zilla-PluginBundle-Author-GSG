@@ -15,6 +15,9 @@ sub configure {
     $self->add_bundle('@Basic');
 
     $self->add_plugins(
+        'Test::Compile',
+        'Test::ReportPrereqs',
+
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
     );
