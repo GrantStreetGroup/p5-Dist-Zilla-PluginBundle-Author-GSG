@@ -27,6 +27,8 @@ sub configure {
         'Test::Compile',
         'Test::ReportPrereqs',
 
+        'GSG::GitHub::UploadRelease',
+
         [ 'Git::NextVersion' => {
                 first_version => '0.0.1',
             }
@@ -114,6 +116,18 @@ sub provide_license {
         }
     );
 }
+
+__PACKAGE__->meta->make_immutable;
+
+package # hide from the CPAN
+    Dist::Zilla::Plugin::GSG::GitHub::UploadRelease;
+use Moose;
+BEGIN { extends 'Dist::Zilla::Plugin::GitHub::UploadRelease' }
+with qw(
+    Dist::Zilla::Role::Releaser
+);
+
+sub release {1} # do nothing, just let the GitHub Uploader do it for us
 
 __PACKAGE__->meta->make_immutable;
 1;

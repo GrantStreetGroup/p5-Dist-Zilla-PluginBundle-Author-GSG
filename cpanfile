@@ -10,6 +10,8 @@ requires 'Dist::Zilla::Plugin::Test::ReportPrereqs';
 requires 'Dist::Zilla::Plugin::Prereqs::FromCPANfile';
 requires 'Dist::Zilla::Plugin::ReadmeAnyFromPod';
 
+requires 'Dist::Zilla::Plugin::GitHub::UploadRelease';
+
 requires 'Dist::Zilla::Plugin::Git::NextVersion';
 requires 'Dist::Zilla::Plugin::Git::Commit';
 requires 'Dist::Zilla::Plugin::Git::Tag';
