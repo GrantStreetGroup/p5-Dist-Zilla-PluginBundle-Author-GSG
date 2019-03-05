@@ -17,6 +17,8 @@ sub configure {
     $self->add_bundle('@Basic');
 
     $self->add_plugins(
+        'GSG::Defaults',
+
         'Test::Compile',
         'Test::ReportPrereqs',
 
@@ -30,6 +32,64 @@ sub configure {
 
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
+    );
+}
+
+__PACKAGE__->meta->make_immutable;
+
+package # hide from the CPAN
+    Dist::Zilla::Plugin::GSG::Defaults;
+
+use Moose;
+with qw(
+    Dist::Zilla::Role::LicenseProvider
+);
+use Git::Wrapper qw();
+use namespace::autoclean;
+
+around 'BUILDARGS' => sub {
+    my ($orig, $self, $args) = @_;
+
+    $args->{zilla}->{authors}
+        ||= ['Grant Street Group <developers@grantstreet.com>'];
+
+    return $self->$orig($args);
+};
+
+sub provide_license {
+    my ( $self, $conf ) = @_;
+
+    my $license_class = $self->zilla->_license_class || 'Artistic_2_0';
+    $license_class =~ s/^(?:Software::License::)?/Software::License::/;
+
+    my $holder = $conf->{copyright_holder} || 'Grant Street Group';
+
+    my $this_year = 1900 + (localtime)[5];
+    my $year = $conf->{copyright_year};
+    if ( $year eq $this_year ) {
+        my ( $commit, $date ) = do { local $@; eval { local $SIG{__DIE__};
+            Git::Wrapper->new('.')->RUN(
+                qw( rev-list --max-parents=0 --pretty=format:%ai HEAD )) } };
+
+        if ($date) {
+            ($year) = $date =~ /^(\d{4})/;
+            $year .= " - $this_year" unless $year == $this_year;
+        }
+    }
+
+    {
+        local $@ = undef;
+        {
+            local $SIG{__DIE__} = 'DEFAULT';
+            eval "require $license_class";
+        }
+        die if $@;
+    }
+
+    return $license_class->new(
+        {   holder => $holder,
+            year   => $year,
+        }
     );
 }
 
