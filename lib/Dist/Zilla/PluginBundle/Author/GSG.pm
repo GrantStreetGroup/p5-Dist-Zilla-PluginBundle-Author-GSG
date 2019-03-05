@@ -14,7 +14,12 @@ sub configure {
 
     my $pod_finder = $self->payload->{pod_finder} || ':InstallModules';
 
-    $self->add_bundle('@Basic');
+    $self->add_bundle( 'Filter' => {
+        -bundle => '@Basic',
+        -remove => [ qw(
+            MetaYAML
+        ) ]
+    } );
 
     $self->add_plugins(
         'GSG::Defaults',
@@ -44,6 +49,8 @@ sub configure {
                 config_plugin      => [ '@Default', 'Contributors' ]
             }
         ],
+
+        'MetaJSON',
 
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
