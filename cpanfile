@@ -10,6 +10,9 @@ requires 'Dist::Zilla::Plugin::Test::ReportPrereqs';
 requires 'Dist::Zilla::Plugin::Prereqs::FromCPANfile';
 requires 'Dist::Zilla::Plugin::ReadmeAnyFromPod';
 
+requires 'Dist::Zilla::Plugin::PodWeaver';
+requires 'Pod::Weaver::Section::Contributors';
+
 on test => sub {
     requires 'Test::Pod', '1.14';
     requires 'Test::Strict';
