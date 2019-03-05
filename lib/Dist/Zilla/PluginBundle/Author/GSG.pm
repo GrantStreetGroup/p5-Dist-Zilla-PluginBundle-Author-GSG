@@ -22,6 +22,21 @@ sub configure {
         'Test::Compile',
         'Test::ReportPrereqs',
 
+        [ 'Git::NextVersion' => {
+                first_version => '0.0.1',
+            }
+        ],
+
+        'Git::Commit',
+        'Git::Tag',
+        'Git::Push',
+
+        [ 'ChangelogFromGit' => {
+                # tag_regexp => '^v(\d+\.\d+\.\d+)$'
+            }
+        ],
+
+        'Git::Contributors',
         [   'PodWeaver' => {
                 finder             => $pod_finder,
                 replacer           => 'replace_with_comment',
