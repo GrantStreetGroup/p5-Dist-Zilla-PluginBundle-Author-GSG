@@ -3,6 +3,24 @@ package Dist::Zilla::PluginBundle::Author::GSG;
 # ABSTRACT: Grant Street Group CPAN dists
 # VERSION
 
+use Moose;
+with qw(
+    Dist::Zilla::Role::PluginBundle::Easy
+);
+use namespace::autoclean;
+
+sub configure {
+    my ($self) = @_;
+
+    $self->add_bundle('@Basic');
+
+    $self->add_plugins(
+        'Prereqs::FromCPANfile',
+        'ReadmeAnyFromPod',
+    );
+}
+
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
