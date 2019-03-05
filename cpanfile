@@ -14,6 +14,11 @@ requires 'Dist::Zilla::Plugin::PodWeaver';
 requires 'Pod::Weaver::Section::Contributors';
 
 on test => sub {
+    requires 'CPAN::Meta';
+    requires 'Capture::Tiny';
+    requires 'File::pushd';
+    requires 'JSON::PP';
+    requires 'Path::Tiny';
     requires 'Test::Pod', '1.14';
     requires 'Test::Strict';
 };
