@@ -27,6 +27,8 @@ sub configure {
         'Test::Compile',
         'Test::ReportPrereqs',
 
+        'StaticInstall',
+
         'GitHub::Meta',
         'GSG::GitHub::UploadRelease',
 

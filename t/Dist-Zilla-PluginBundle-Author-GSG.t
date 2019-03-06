@@ -48,6 +48,9 @@ __END__
             'url'  => 'git://github.com/OurExternal-Package.git',
             'web'  => 'https://github.com/OurExternal-Package'
         } }, "Added details about github";
+
+    ok $meta->{x_static_install},
+        "No extra dependencies, marked as x_static_install";
 };
 
 done_testing;
