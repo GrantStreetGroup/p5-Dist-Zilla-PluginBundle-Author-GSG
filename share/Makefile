@@ -27,7 +27,7 @@ test : REQUIRE_CARTON $(CPANFILE_SNAPSHOT)
 testcoverage : $(CPANFILE_SNAPSHOT)
 	carton exec -- cover -test -ignore . -select ^lib
 
-update: $(CONTRIB) README.md
+update: Makefile $(CONTRIB) README.md
 	@echo Everything is up to date
 
 README.md: lib/$(MAIN_MODULE) dist.ini REQUIRE_CARTON $(CPANFILE_SNAPSHOT)
@@ -45,7 +45,7 @@ Makefile: $(SHARE_DIR)/Makefile
 $(CPANFILE_SNAPSHOT): cpanfile
 	carton install
 
-REQUIRE_CARTON: Makefile
+REQUIRE_CARTON:
 	@if ! carton --version >/dev/null 2>&1 ; then \
 		echo You must install carton: https://metacpan.org/pod/Carton >&2; \
 		false; \
