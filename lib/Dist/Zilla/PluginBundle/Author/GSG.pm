@@ -27,6 +27,7 @@ sub configure {
         'Test::Compile',
         'Test::ReportPrereqs',
 
+        'GitHub::Meta',
         'GSG::GitHub::UploadRelease',
 
         [ 'Git::NextVersion' => {

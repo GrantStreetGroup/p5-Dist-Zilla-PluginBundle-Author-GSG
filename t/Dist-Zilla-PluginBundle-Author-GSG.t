@@ -40,6 +40,14 @@ __END__
         = $dist->child($distdir)->child("lib/External/Package.pm")->slurp;
     like $built, qr/\QThis software is Copyright (c) 2001 - $year by $holder./,
         "Put the expected copyright in the module";
+
+    my $meta = load_meta($dist);
+    is_deeply $meta->{resources}, {
+        'repository' => {
+            'type' => 'git',
+            'url'  => 'git://github.com/OurExternal-Package.git',
+            'web'  => 'https://github.com/OurExternal-Package'
+        } }, "Added details about github";
 };
 
 done_testing;
