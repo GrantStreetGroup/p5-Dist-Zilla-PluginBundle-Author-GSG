@@ -42,6 +42,17 @@ __END__
         "Put the expected copyright in the module";
 
     my $meta = load_meta($dist);
+
+    is_deeply $meta->{author},
+        ['Grant Street Group <developers@grantstreet.com>'],
+        "Found the default GSG Author";
+    is $meta->{abstract}, 'ABSTRACT', "Found the ABSTRACT in the module";
+
+    my ( $user, $email ) = split /\n/, run( $dist,
+        "git config --get user.name; git config --get user.email" )->{output};
+    is_deeply $meta->{x_contributors}, [ "$user <$email>" ],
+        "Current user is the only contributor.";
+
     is_deeply $meta->{resources}, {
         'repository' => {
             'type' => 'git',
