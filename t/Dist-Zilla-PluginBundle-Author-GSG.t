@@ -56,8 +56,8 @@ __END__
     is_deeply $meta->{resources}, {
         'repository' => {
             'type' => 'git',
-            'url'  => 'git://github.com/OurExternal-Package.git',
-            'web'  => 'https://github.com/OurExternal-Package'
+            'url'  => 'git://github.com/GSGTest/OurExternal-Package.git',
+            'web'  => 'https://github.com/GSGTest/OurExternal-Package'
         } }, "Added details about github";
 
     ok $meta->{x_static_install},
@@ -72,6 +72,7 @@ sub new_dist {
     my $dir = Path::Tiny->tempdir;
 
     run($dir, "git init && git remote add origin $dir");
+    run($dir, "git config --add github.user GSGTest");
     for my $path (sort keys %files) {
         my $contents = $files{$path};
 
