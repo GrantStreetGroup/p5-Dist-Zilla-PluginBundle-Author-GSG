@@ -1,10 +1,9 @@
-DIST_NAME   := $(shell sed -ne 's/name\s*=\s*//p' dist.ini )
+DIST_NAME   := $(shell sed -ne 's/^name\s*=\s*//p' dist.ini )
 MAIN_MODULE := $(subst -,/,$(DIST_NAME)).pm
 
 SHARE_DIR   := $(shell \
   carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
-    'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG")' 2>/dev/null \
-      || echo "share" )
+    'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") } || "share"' )
 
 CPANFILE_SNAPSHOT := $(shell \
   carton exec perl -MFile::Spec -e \
