@@ -27,7 +27,7 @@ test : REQUIRE_CARTON $(CPANFILE_SNAPSHOT)
 testcoverage : $(CPANFILE_SNAPSHOT)
 	carton exec -- cover -test -ignore . -select ^lib
 
-update: Makefile $(CONTRIB) README.md
+update: $(CONTRIB) README.md
 	@echo Everything is up to date
 
 README.md: lib/$(MAIN_MODULE) dist.ini REQUIRE_CARTON $(CPANFILE_SNAPSHOT)
@@ -39,8 +39,7 @@ $(CONTRIB): $(SHARE_DIR)/$$(@)
 
 Makefile: $(SHARE_DIR)/Makefile
 	cp $< $@
-	@echo Makefile changed, please start again >&2
-	@false
+	@echo Makefile updated>&2
 
 $(CPANFILE_SNAPSHOT): cpanfile
 	carton install
