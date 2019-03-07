@@ -13,6 +13,14 @@ CPANFILE_SNAPSHOT := $(shell \
 
 CONTRIB := CONTRIBUTING.md MANIFEST.SKIP
 
+# If someone includes this Makefile, don't write the Makefile
+# target because otherwise we will overwrite their custom Makefile
+ifeq ($(firstword $(MAKEFILE_LIST)),$(lastword $(MAKEFILE_LIST)))
+	MAKEFILE_TARGET := $(firstword $(MAKEFILE_LIST))
+else
+	MAKEFILE_TARGET := ""
+endif
+
 ifndef CPANFILE_SNAPSHOT
 	CPANFILE_SNAPSHOT := .MAKE
 endif
@@ -27,6 +35,10 @@ test : REQUIRE_CARTON $(CPANFILE_SNAPSHOT)
 testcoverage : $(CPANFILE_SNAPSHOT)
 	carton exec -- cover -test -ignore . -select ^lib
 
+$(MAKEFILE_TARGET): $(SHARE_DIR)/Makefile
+	cp $< $@
+	@echo Makefile updated>&2
+
 update: $(CONTRIB) README.md
 	@echo Everything is up to date
 
@@ -36,10 +48,6 @@ README.md: lib/$(MAIN_MODULE) dist.ini REQUIRE_CARTON $(CPANFILE_SNAPSHOT)
 .SECONDEXPANSION:
 $(CONTRIB): $(SHARE_DIR)/$$(@)
 	cp $< $@
-
-Makefile: $(SHARE_DIR)/Makefile
-	cp $< $@
-	@echo Makefile updated>&2
 
 $(CPANFILE_SNAPSHOT): cpanfile
 	carton install
