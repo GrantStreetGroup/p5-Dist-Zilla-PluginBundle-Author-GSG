@@ -1,9 +1,9 @@
 DIST_NAME   := $(shell sed -ne 's/^name\s*=\s*//p' dist.ini )
 MAIN_MODULE := $(subst -,/,$(DIST_NAME)).pm
-
 SHARE_DIR   := $(shell \
   carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
-    'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") } || "share"' )
+    'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") } \
+	|| "share"' 2>/dev/null )
 
 CPANFILE_SNAPSHOT := $(shell \
   carton exec perl -MFile::Spec -e \
@@ -17,7 +17,10 @@ CARTON_INSTALL_FLAGS ?= --without develop
 
 # If someone includes this Makefile, don't write the Makefile
 # target because otherwise we will overwrite their custom Makefile
-ifeq ($(firstword $(MAKEFILE_LIST)),$(lastword $(MAKEFILE_LIST)))
+ifndef SHARE_DIR
+	# Without a sharedir we don't know where to get the Makefile
+	MAKEFILE_TARGET := ""
+else ifeq ($(firstword $(MAKEFILE_LIST)),$(lastword $(MAKEFILE_LIST)))
 	MAKEFILE_TARGET := $(firstword $(MAKEFILE_LIST))
 else
 	MAKEFILE_TARGET := ""
