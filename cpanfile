@@ -35,3 +35,7 @@ on test => sub {
     requires 'Test::Pod', '1.14';
     requires 'Test::Strict';
 };
+
+on develop => sub {
+    requires 'Dist::Zilla::Plugin::Bootstrap::lib';
+};

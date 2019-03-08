@@ -13,6 +13,8 @@ CPANFILE_SNAPSHOT := $(shell \
 
 CONTRIB := CONTRIBUTING.md MANIFEST.SKIP
 
+CARTON_INSTALL_FLAGS ?= --without develop
+
 # If someone includes this Makefile, don't write the Makefile
 # target because otherwise we will overwrite their custom Makefile
 ifeq ($(firstword $(MAKEFILE_LIST)),$(lastword $(MAKEFILE_LIST)))
@@ -50,7 +52,7 @@ $(CONTRIB): $(SHARE_DIR)/$$(@)
 	cp $< $@
 
 $(CPANFILE_SNAPSHOT): cpanfile
-	carton install
+	carton install $(CARTON_INSTALL_FLAGS)
 
 REQUIRE_CARTON:
 	@if ! carton --version >/dev/null 2>&1 ; then \
