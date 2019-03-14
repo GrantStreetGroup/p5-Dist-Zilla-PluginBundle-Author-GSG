@@ -41,7 +41,7 @@ testcoverage : $(CPANFILE_SNAPSHOT)
 	carton exec -- cover -test -ignore . -select ^lib
 
 $(MAKEFILE_TARGET): $(SHARE_DIR)/Makefile
-	cp $< $@
+	install -m 644 $< $@
 	@echo Makefile updated>&2
 
 update: $(CONTRIB) README.md
@@ -52,7 +52,7 @@ README.md: lib/$(MAIN_MODULE) dist.ini REQUIRE_CARTON $(CPANFILE_SNAPSHOT)
 
 .SECONDEXPANSION:
 $(CONTRIB): $(SHARE_DIR)/$$(@)
-	cp $< $@
+	install -m 644 $< $@
 
 $(CPANFILE_SNAPSHOT): cpanfile
 	carton install $(CARTON_INSTALL_FLAGS)
