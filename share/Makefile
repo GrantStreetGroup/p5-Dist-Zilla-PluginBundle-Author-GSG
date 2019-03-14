@@ -1,17 +1,17 @@
-DIST_NAME   := $(shell sed -ne 's/^name\s*=\s*//p' dist.ini )
-MAIN_MODULE := $(subst -,/,$(DIST_NAME)).pm
-SHARE_DIR   := $(shell \
+DIST_NAME   ?= $(shell sed -ne 's/^name\s*=\s*//p' dist.ini )
+MAIN_MODULE ?= $(subst -,/,$(DIST_NAME)).pm
+SHARE_DIR   ?= $(shell \
   carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
     'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") } \
 	|| "share"' 2>/dev/null )
 
-CPANFILE_SNAPSHOT := $(shell \
+CPANFILE_SNAPSHOT ?= $(shell \
   carton exec perl -MFile::Spec -e \
 	'($$_) = grep { -e } map{ "$$_/../../cpanfile.snapshot" } \
 		grep { m(/lib/perl5$$) } @INC; \
 		print File::Spec->abs2rel($$_) . "\n" if $$_' 2>/dev/null )
 
-CONTRIB := CONTRIBUTING.md MANIFEST.SKIP
+CONTRIB ?= CONTRIBUTING.md MANIFEST.SKIP
 
 CARTON_INSTALL_FLAGS ?= --without develop
 
@@ -26,9 +26,7 @@ else
 	MAKEFILE_TARGET := ""
 endif
 
-ifndef CPANFILE_SNAPSHOT
-	CPANFILE_SNAPSHOT := .MAKE
-endif
+CPANFILE_SNAPSHOT ?= .MAKE
 
 .PHONY : test REQUIRE_CARTON
 
