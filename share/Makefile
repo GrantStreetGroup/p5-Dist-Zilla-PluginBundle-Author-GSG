@@ -10,9 +10,9 @@ CPANFILE_SNAPSHOT ?= $(shell \
 		grep { m(/lib/perl5$$) } @INC; \
 		print File::Spec->abs2rel($$_) . "\n" if $$_' 2>/dev/null )
 
-CONTRIB ?= CONTRIBUTING.md MANIFEST.SKIP
-
+CPANFILE_SNAPSHOT    ?= .MAKE
 CARTON_INSTALL_FLAGS ?= --without develop
+CONTRIB              ?= CONTRIBUTING.md MANIFEST.SKIP
 
 # If someone includes this Makefile, don't write the Makefile
 # target because otherwise we will overwrite their custom Makefile
@@ -24,8 +24,6 @@ else ifeq ($(firstword $(MAKEFILE_LIST)),$(lastword $(MAKEFILE_LIST)))
 else
 	MAKEFILE_TARGET := ""
 endif
-
-CPANFILE_SNAPSHOT ?= .MAKE
 
 .PHONY : test REQUIRE_CARTON
 
