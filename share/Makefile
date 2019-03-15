@@ -33,7 +33,7 @@ else
 	MAKEFILE_TARGET := ""
 endif
 
-.PHONY : test REQUIRE_CARTON
+.PHONY : test clean realclean REQUIRE_CARTON
 
 test : $(CPANFILE_SNAPSHOT)
 	@nice $(CARTON) exec prove -lfr t
@@ -47,6 +47,13 @@ $(MAKEFILE_TARGET): $(SHARE_DIR)/Makefile
 	install -m 644 $< $@
 	@echo Makefile updated>&2
 
+clean:
+	$(CARTON) exec dzil clean || true
+	rm -rf .build
+
+realclean: clean
+	rm -rf local
+
 update: $(CONTRIB) README.md LICENSE.txt
 	@echo Everything is up to date
 
@@ -54,7 +61,7 @@ README.md: lib/$(MAIN_MODULE) dist.ini $(CPANFILE_SNAPSHOT)
 	$(CARTON) exec dzil run sh -c "pod2markdown $< > ${CURDIR}/$@"
 
 LICENSE.txt: dist.ini $(CPANFILE_SNAPSHOT)
-	$(CARTON) exec dzil run sh -c "cp LICENSE ${CURDIR}/$@"
+	$(CARTON) exec dzil run sh -c "install -m 644 LICENSE ${CURDIR}/$@"
 
 .SECONDEXPANSION:
 $(CONTRIB): $(SHARE_DIR)/$$(@)
