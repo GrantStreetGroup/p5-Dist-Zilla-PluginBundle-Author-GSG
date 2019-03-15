@@ -70,6 +70,16 @@ you can get the licence and author default from this Plugin.
     [@Basic]
     [Author::GSG]
 
+Which is the same as
+
+    name = Foo-Bar-GSG
+    author = Grant Street Group <developers@grantstreet.com>
+    license = Artistic_2_0
+    copyright_holder = Grant Street Group
+    copyright_year = # detected from git
+
+    [@Basic]
+
 =head1 DESCRIPTION
 
 Provides a default license L<Software::License::Artistic_2_0>,

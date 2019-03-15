@@ -1,3 +1,7 @@
+# WARNING: This Makefile should update itself automatically
+# if a new version of Dist::Zilla::PluginBundle::Author::GSG is installed.
+# See the docmentation for that module for details.
+
 DIST_NAME   ?= $(shell sed -ne 's/^name\s*=\s*//p' dist.ini )
 MAIN_MODULE ?= $(subst -,/,$(DIST_NAME)).pm
 SHARE_DIR   ?= $(shell \
