@@ -22,7 +22,7 @@ sub configure {
     } );
 
     $self->add_plugins(
-        'GSG::Defaults',
+        'Author::GSG',
 
         'Test::Compile',
         'Test::ReportPrereqs',
@@ -30,7 +30,7 @@ sub configure {
         'StaticInstall',
 
         'GitHub::Meta',
-        'GSG::GitHub::UploadRelease',
+        'Author::GSG::GitHub::UploadRelease',
 
         [ 'Git::NextVersion' => {
                 first_version => '0.0.1',
@@ -65,7 +65,7 @@ sub configure {
 __PACKAGE__->meta->make_immutable;
 
 package # hide from the CPAN
-    Dist::Zilla::Plugin::GSG::Defaults;
+    Dist::Zilla::Plugin::Author::GSG;
 
 use Moose;
 with qw(
@@ -124,7 +124,7 @@ sub provide_license {
 __PACKAGE__->meta->make_immutable;
 
 package # hide from the CPAN
-    Dist::Zilla::Plugin::GSG::GitHub::UploadRelease;
+    Dist::Zilla::Plugin::Author::GSG::GitHub::UploadRelease;
 use Moose;
 BEGIN { extends 'Dist::Zilla::Plugin::GitHub::UploadRelease' }
 with qw(
