@@ -12,6 +12,7 @@ CPANFILE_SNAPSHOT ?= $(shell \
 
 CPANFILE_SNAPSHOT    ?= .MAKE
 CARTON_INSTALL_FLAGS ?= --without develop
+PERL_CARTON_PERL5LIB ?= $(PERL5LIB)
 CONTRIB              ?= CONTRIBUTING.md MANIFEST.SKIP
 
 # If someone includes this Makefile, don't write the Makefile
