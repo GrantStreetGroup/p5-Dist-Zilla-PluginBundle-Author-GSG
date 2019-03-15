@@ -33,18 +33,16 @@ sub configure {
         'Author::GSG::GitHub::UploadRelease',
 
         [ 'Git::NextVersion' => {
-                first_version => '0.0.1',
-            }
-        ],
+            first_version => '0.0.1',
+        } ],
 
         'Git::Commit',
         'Git::Tag',
         'Git::Push',
 
         [ 'ChangelogFromGit' => {
-                # tag_regexp => '^v(\d+\.\d+\.\d+)$'
-            }
-        ],
+            tag_regexp => '^v(\d+\.\d+\.\d+)$'
+        } ],
 
         'Git::Contributors',
         [   'PodWeaver' => {
