@@ -27,10 +27,26 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     -bundle = @Basic
     -remove = MetaYAML
 
-    [Author::GSG]
+    # The defaults for author and licence come from
+    #[Author::GSG]
 
-    [Test::Compile]
-    [Test::ReportPrereqs]
+    [MetaJSON]
+    [Prereqs::FromCPANfile]
+    [ReadmeAnyFromPod]
+
+    [StaticInstall]
+
+    [Pod::Weaver]
+    finder = :InstallModules
+    replacer = replace_with_comment
+    post_code_replacer = replace_with_nothing
+    config_plugin = [ @Default, Contributors ]
+
+    [GitHub::Meta]
+    [GitHub::UploadRelease] # with magic to work without releasing elsewhere
+
+    [ChangelogFromGit]
+    tag_regexp = ^v(\d+\.\d+\.\d+)$
 
     [Git::NextVersion]
     first_version = 0.0.1
@@ -39,21 +55,10 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [Git::Tag]
     [Git::Push]
 
-    [ChangelogFromGit]
-    tag_regexp = ^v(\d+\.\d+\.\d+)$
-
     [Git::Contributors]
 
-    [Pod::Weaver]
-    finder = :InstallModules
-    replacer = replace_with_comment
-    post_code_replacer = replace_with_nothing
-    config_plugin = [ @Default, Contributors ]
-
-    [MetaJSON]
-
-    [Prereqs::FromCPANfile]
-    [ReadmeAnyFromPod]
+    [Test::Compile]
+    [Test::ReportPrereqs]
 
 You can override [Pod::Weaver](https://metacpan.org/pod/Pod::Weaver)'s `finder` by setting `pod_finder`.
 
