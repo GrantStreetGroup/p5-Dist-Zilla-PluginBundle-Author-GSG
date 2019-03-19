@@ -24,13 +24,26 @@ sub configure {
     $self->add_plugins(
         'Author::GSG',
 
-        'Test::Compile',
-        'Test::ReportPrereqs',
+        'MetaJSON',
+        'Prereqs::FromCPANfile',
+        'ReadmeAnyFromPod',
 
         'StaticInstall',
 
+        [   'PodWeaver' => {
+                finder             => $pod_finder,
+                replacer           => 'replace_with_comment',
+                post_code_replacer => 'replace_with_nothing',
+                config_plugin      => [ '@Default', 'Contributors' ]
+            }
+        ],
+
         'GitHub::Meta',
         'Author::GSG::GitHub::UploadRelease',
+
+        [ 'ChangelogFromGit' => {
+            tag_regexp => '^v(\d+\.\d+\.\d+)$'
+        } ],
 
         [ 'Git::NextVersion' => {
             first_version => '0.0.1',
@@ -40,23 +53,10 @@ sub configure {
         'Git::Tag',
         'Git::Push',
 
-        [ 'ChangelogFromGit' => {
-            tag_regexp => '^v(\d+\.\d+\.\d+)$'
-        } ],
-
         'Git::Contributors',
-        [   'PodWeaver' => {
-                finder             => $pod_finder,
-                replacer           => 'replace_with_comment',
-                post_code_replacer => 'replace_with_nothing',
-                config_plugin      => [ '@Default', 'Contributors' ]
-            }
-        ],
 
-        'MetaJSON',
-
-        'Prereqs::FromCPANfile',
-        'ReadmeAnyFromPod',
+        'Test::Compile',
+        'Test::ReportPrereqs',
     );
 }
 
@@ -98,10 +98,26 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     -bundle = @Basic
     -remove = MetaYAML
 
-    [Author::GSG]
+    # The defaults for author and licence come from
+    #[Author::GSG]
 
-    [Test::Compile]
-    [Test::ReportPrereqs]
+    [MetaJSON]
+    [Prereqs::FromCPANfile]
+    [ReadmeAnyFromPod]
+
+    [StaticInstall]
+
+    [Pod::Weaver]
+    finder = :InstallModules
+    replacer = replace_with_comment
+    post_code_replacer = replace_with_nothing
+    config_plugin = [ @Default, Contributors ]
+
+    [GitHub::Meta]
+    [GitHub::UploadRelease] # with magic to work without releasing elsewhere
+
+    [ChangelogFromGit]
+    tag_regexp = ^v(\d+\.\d+\.\d+)$
 
     [Git::NextVersion]
     first_version = 0.0.1
@@ -110,21 +126,10 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Git::Tag]
     [Git::Push]
 
-    [ChangelogFromGit]
-    tag_regexp = ^v(\d+\.\d+\.\d+)$
-
     [Git::Contributors]
 
-    [Pod::Weaver]
-    finder = :InstallModules
-    replacer = replace_with_comment
-    post_code_replacer = replace_with_nothing
-    config_plugin = [ @Default, Contributors ]
-
-    [MetaJSON]
-
-    [Prereqs::FromCPANfile]
-    [ReadmeAnyFromPod]
+    [Test::Compile]
+    [Test::ReportPrereqs]
 
 You can override L<Pod::Weaver>'s C<finder> by setting C<pod_finder>.
 
