@@ -27,7 +27,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     -bundle = @Basic
     -remove = MetaYAML
 
-    # The defaults for author and licence come from
+    # The defaults for author and license come from
     #[Author::GSG]
 
     [MetaJSON]
@@ -43,7 +43,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     config_plugin = [ @Default, Contributors ]
 
     [GitHub::Meta]
-    [GitHub::UploadRelease] # with magic to work without releasing elsewhere
+    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
 
     [ChangelogFromGit]
     tag_regexp = ^v(\d+\.\d+\.\d+)$
@@ -60,8 +60,6 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [Test::Compile]
     [Test::ReportPrereqs]
 
-You can override [Pod::Weaver](https://metacpan.org/pod/Pod::Weaver)'s `finder` by setting `pod_finder`.
-
 # DESCRIPTION
 
 This PluginBundle is here to make it easy for folks at GSG to release
@@ -69,6 +67,13 @@ public distributions of modules as well as trying to make it easy for
 other folks to contribute.
 
 # Setting up a new dist
+
+## Create your dist.ini
+
+As above, you need the `name` and `[@Author::GSG]` bundle,
+plus any other changes you need.
+
+You can override [Pod::Weaver](https://metacpan.org/pod/Pod::Weaver)'s `finder` by setting `pod_finder`.
 
 ## Add Dist::Zilla::PluginBundle::Author::GSG to your cpanfile
 
@@ -97,9 +102,13 @@ might look like this:
     include $(SHARE_DIR)/Makefile
 
     # Copy the SHARE_DIR Makefile over this one:
+    # Making it .PHONY will force it to copy even if this one is newer.
     .PHONY: Makefile
     Makefile: $(SHARE_DIR)/Makefile
         cp $< $@
+
+Using this example Makefile does require you run `carton install` after
+adding the `on 'develop'` dependency to your cpanfile as described above.
 
 If you want to override the Makefile included with this Plugin
 but still want to use some of the targets in it,

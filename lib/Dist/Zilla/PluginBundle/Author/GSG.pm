@@ -98,7 +98,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     -bundle = @Basic
     -remove = MetaYAML
 
-    # The defaults for author and licence come from
+    # The defaults for author and license come from
     #[Author::GSG]
 
     [MetaJSON]
@@ -114,7 +114,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     config_plugin = [ @Default, Contributors ]
 
     [GitHub::Meta]
-    [GitHub::UploadRelease] # with magic to work without releasing elsewhere
+    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
 
     [ChangelogFromGit]
     tag_regexp = ^v(\d+\.\d+\.\d+)$
@@ -131,8 +131,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Test::Compile]
     [Test::ReportPrereqs]
 
-You can override L<Pod::Weaver>'s C<finder> by setting C<pod_finder>.
-
 =head1 DESCRIPTION
 
 This PluginBundle is here to make it easy for folks at GSG to release
@@ -140,6 +138,13 @@ public distributions of modules as well as trying to make it easy for
 other folks to contribute.
 
 =head1 Setting up a new dist
+
+=head2 Create your dist.ini
+
+As above, you need the C<name> and C<[@Author::GSG]> bundle,
+plus any other changes you need.
+
+You can override L<Pod::Weaver>'s C<finder> by setting C<pod_finder>.
 
 =head2 Add Dist::Zilla::PluginBundle::Author::GSG to your cpanfile
 
@@ -168,9 +173,13 @@ might look like this:
     include $(SHARE_DIR)/Makefile
 
     # Copy the SHARE_DIR Makefile over this one:
+    # Making it .PHONY will force it to copy even if this one is newer.
     .PHONY: Makefile
     Makefile: $(SHARE_DIR)/Makefile
     	cp $< $@
+
+Using this example Makefile does require you run C<carton install> after
+adding the C<on 'develop'> dependency to your cpanfile as described above.
 
 If you want to override the Makefile included with this Plugin
 but still want to use some of the targets in it,
