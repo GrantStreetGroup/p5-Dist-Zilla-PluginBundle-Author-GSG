@@ -6,9 +6,9 @@ documentation fixes, new issues, or even publicity.
 
 Our Open Source code lives on GitHub at https://github.com/GrantStreetGroup
 
-TODO: Add description about what makes a standard workflow including,
-cloning the repository, writing tests, making good commits,
-and adding PRs to Github
+The Grant Street code on GitHub follows the standard [GitHub Flow](https://help.github.com/en/articles/github-flow).  This means forking the repo, creating a branch, making commits, and creating a Pull Request.  We also welcome new GitHub Issues for any of our projects.
+
+If you have any questions about things that aren't covered here, we can hopefully provide more help if you email <developers@grantstreet.com>.
 
 ## Getting Started
 
