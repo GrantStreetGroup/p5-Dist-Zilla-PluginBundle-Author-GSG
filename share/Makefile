@@ -3,7 +3,7 @@
 # See the docmentation for that module for details.
 
 DIST_NAME   ?= $(shell perl -ne '/^\s*name\s*=\s*(\S+)/ && print $$1' dist.ini )
-MAIN_MODULE ?= $(subst -,/,$(DIST_NAME)).pm
+MAIN_MODULE ?= $(shell perl -ne '/^\s*main_module\s*=\s*(\S+)/ && print $$1' dist.ini )
 SHARE_DIR   ?= $(shell \
   carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
     'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") }' 2>/dev/null )
@@ -15,6 +15,9 @@ CPANFILE_SNAPSHOT ?= $(shell \
 		grep { m(/lib/perl5$$) } @INC; \
 		print File::Spec->abs2rel($$_) . "\n" if $$_' 2>/dev/null )
 
+ifeq ($(MAIN_MODULE),)
+MAIN_MODULE := lib/$(subst -,/,$(DIST_NAME)).pm
+endif
 ifeq ($(CPANFILE_SNAPSHOT),)
 CPANFILE_SNAPSHOT    := cpanfile.snapshot
 endif
@@ -57,7 +60,7 @@ realclean: clean
 update: $(CONTRIB) README.md LICENSE.txt
 	@echo Everything is up to date
 
-README.md: lib/$(MAIN_MODULE) dist.ini $(CPANFILE_SNAPSHOT)
+README.md: $(MAIN_MODULE) dist.ini $(CPANFILE_SNAPSHOT)
 	$(CARTON) exec dzil run sh -c "pod2markdown $< > ${CURDIR}/$@"
 
 LICENSE.txt: dist.ini $(CPANFILE_SNAPSHOT)
