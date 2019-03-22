@@ -2,7 +2,7 @@
 # if a new version of Dist::Zilla::PluginBundle::Author::GSG is installed.
 # See the docmentation for that module for details.
 
-DIST_NAME   ?= $(shell sed -ne 's/^name\s*=\s*//p' dist.ini )
+DIST_NAME   ?= $(shell perl -ne '/^\s*name\s*=\s*(\S+)/ && print $$1' dist.ini )
 MAIN_MODULE ?= $(subst -,/,$(DIST_NAME)).pm
 SHARE_DIR   ?= $(shell \
   carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
