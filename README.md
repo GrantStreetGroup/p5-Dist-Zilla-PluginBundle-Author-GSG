@@ -66,6 +66,21 @@ This PluginBundle is here to make it easy for folks at GSG to release
 public distributions of modules as well as trying to make it easy for
 other folks to contribute.
 
+The `share_dir` for this module includes GSG standard files to include
+with open source modules.  Things like a standard Makefile,
+a contributing guide, and a MANIFEST.SKIP that should work with this Plugin.
+See the ["update"](#update) Makefile target for details.
+
+The expected workflow for a module using this code is that after following
+the initial setup decribed below, you would manage changes via standard
+GitHub flow pull requests and issues.
+When ready for a release, you would first `make update` to update
+any included documents, commit those,
+and then run `carton exec dzil release`.
+You can set a specific release version with the `V` environment variable,
+as described in the
+[Git::NextVersion Plugin](https://metacpan.org/pod/Dist::Zilla::Plugin::Git::NextVersion) documentation.
+
 # Setting up a new dist
 
 ## Create your dist.ini
