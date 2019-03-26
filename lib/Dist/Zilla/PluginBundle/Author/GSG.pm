@@ -18,6 +18,7 @@ sub configure {
         -bundle => '@Basic',
         -remove => [ qw(
             MetaYAML
+            UploadToCPAN
         ) ]
     } );
 
@@ -97,6 +98,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [@Filter]
     -bundle = @Basic
     -remove = MetaYAML
+    -remove = UploadToCPAN
 
     # The defaults for author and license come from
     #[Author::GSG]

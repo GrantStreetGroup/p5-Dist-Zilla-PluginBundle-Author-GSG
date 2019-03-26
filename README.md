@@ -26,6 +26,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [@Filter]
     -bundle = @Basic
     -remove = MetaYAML
+    -remove = UploadToCPAN
 
     # The defaults for author and license come from
     #[Author::GSG]
