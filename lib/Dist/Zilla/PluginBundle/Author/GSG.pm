@@ -39,9 +39,6 @@ sub configure {
             }
         ],
 
-        'GitHub::Meta',
-        'Author::GSG::GitHub::UploadRelease',
-
         [ 'ChangelogFromGit' => {
             tag_regexp => '^v(\d+\.\d+\.\d+)$'
         } ],
@@ -55,6 +52,9 @@ sub configure {
         'Git::Push',
 
         'Git::Contributors',
+
+        'GitHub::Meta',
+        'Author::GSG::GitHub::UploadRelease',
 
         'Test::Compile',
         'Test::ReportPrereqs',
@@ -72,6 +72,21 @@ with qw(
 );
 
 sub release {1} # do nothing, just let the GitHub Uploader do it for us
+
+sub _get_credentials {
+    my ($self, $login_only) = @_;
+
+    my $creds = $self->_credentials;
+    # return $creds->{login} if $login_only;
+
+    my $otp;
+    $otp = $self->zilla->chrome->prompt_str(
+        "GitHub two-factor authentication code for '$creds->{login}'",
+        { noecho => 1 },
+    ) if $self->prompt_2fa;
+
+    return ( $creds->{login}, $creds->{pass}, $otp );
+}
 
 __PACKAGE__->meta->make_immutable;
 1;
@@ -115,9 +130,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
-    [GitHub::Meta]
-    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
-
     [ChangelogFromGit]
     tag_regexp = ^v(\d+\.\d+\.\d+)$
 
@@ -129,6 +141,9 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Git::Push]
 
     [Git::Contributors]
+
+    [GitHub::Meta]
+    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
 
     [Test::Compile]
     [Test::ReportPrereqs]
