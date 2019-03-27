@@ -73,6 +73,21 @@ with qw(
 
 sub release {1} # do nothing, just let the GitHub Uploader do it for us
 
+sub _get_credentials {
+    my ($self, $login_only) = @_;
+
+    my $creds = $self->_credentials;
+    # return $creds->{login} if $login_only;
+
+    my $otp;
+    $otp = $self->zilla->chrome->prompt_str(
+        "GitHub two-factor authentication code for '$creds->{login}'",
+        { noecho => 1 },
+    ) if $self->prompt_2fa;
+
+    return ( $creds->{login}, $creds->{pass}, $otp );
+}
+
 __PACKAGE__->meta->make_immutable;
 1;
 
