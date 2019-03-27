@@ -73,6 +73,18 @@ with qw(
 
 sub release {1} # do nothing, just let the GitHub Uploader do it for us
 
+around 'after_release' => sub {
+    my ($orig, $self, @args) = @_;
+
+    my $git_tag_plugin = $self->zilla->plugin_named('@Author::GSG/Git::Tag')
+        or $self->log_fatal('Plugin @Author::GSG/Git::Tag not found!');
+
+    # GitHub::UploadRelease looks for the Git::Tag Plugin with this name
+    local $git_tag_plugin->{plugin_name} = 'Git::Tag';
+
+    return $self->$orig(@args);
+};
+
 sub _get_credentials {
     my ($self, $login_only) = @_;
 
