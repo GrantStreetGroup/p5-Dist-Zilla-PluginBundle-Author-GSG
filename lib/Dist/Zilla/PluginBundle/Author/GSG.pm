@@ -39,9 +39,6 @@ sub configure {
             }
         ],
 
-        'GitHub::Meta',
-        'Author::GSG::GitHub::UploadRelease',
-
         [ 'ChangelogFromGit' => {
             tag_regexp => '^v(\d+\.\d+\.\d+)$'
         } ],
@@ -55,6 +52,9 @@ sub configure {
         'Git::Push',
 
         'Git::Contributors',
+
+        'GitHub::Meta',
+        'Author::GSG::GitHub::UploadRelease',
 
         'Test::Compile',
         'Test::ReportPrereqs',
@@ -142,9 +142,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
-    [GitHub::Meta]
-    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
-
     [ChangelogFromGit]
     tag_regexp = ^v(\d+\.\d+\.\d+)$
 
@@ -156,6 +153,9 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Git::Push]
 
     [Git::Contributors]
+
+    [GitHub::Meta]
+    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
 
     [Test::Compile]
     [Test::ReportPrereqs]
