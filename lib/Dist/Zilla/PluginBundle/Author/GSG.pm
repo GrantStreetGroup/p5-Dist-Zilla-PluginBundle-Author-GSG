@@ -73,6 +73,8 @@ with qw(
 
 sub release {1} # do nothing, just let the GitHub Uploader do it for us
 
+# TODO: on release, regen README.md in src dir
+
 around 'after_release' => sub {
     my ($orig, $self, @args) = @_;
 
@@ -284,6 +286,40 @@ it is out of date.
 The C<CARTON_INSTALL_FLAGS> are by default C<--without develop>
 in order to avoid unnecessarily installing the heavy C<Dist::Zilla>
 dependency chain.
+
+=back
+
+=head2 Cutting a release
+
+    carton exec dzil release
+
+This should calculate the new version number, build a new release tarball,
+add a release tag, create the release on GitHub and upload the tarball to it.
+
+You can set the C<V> environment variable to force a specific version,
+as described by L<Dist::Zilla::Plugin::Git::NextVersion>.
+
+    V=2.0.0 carton exec dzil release
+
+=over
+
+=item Your git remote must be a format GitHub::UploadRelease understands
+
+Either
+C<ssh://git@github.com/GrantsStreetGroup/$repo.git>
+or
+C<https://github.com/GrantsStreetGroup/$repo.git>.
+
+As shown in the "Fetch URL" from C<git remote -n $remote>,
+
+=item Set C<github.user> and either C<github.password> or C<github.token>
+
+You should probably use a token instead of your password,
+which you can get by following
+L<GitHub's instructions|https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line>.
+
+    git config --global github.user  github_login_name
+    git config --global github.token token_from_instructions_above
 
 =back
 

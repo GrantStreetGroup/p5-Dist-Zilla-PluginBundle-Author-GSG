@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version 0.0.1
+version 0.0.4
 
 # SYNOPSIS
 
@@ -43,9 +43,6 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
-    [GitHub::Meta]
-    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
-
     [ChangelogFromGit]
     tag_regexp = ^v(\d+\.\d+\.\d+)$
 
@@ -57,6 +54,9 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [Git::Push]
 
     [Git::Contributors]
+
+    [GitHub::Meta]
+    [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
 
     [Test::Compile]
     [Test::ReportPrereqs]
@@ -179,6 +179,36 @@ Some of the targets that are included in the Makefile are:
     The `CARTON_INSTALL_FLAGS` are by default `--without develop`
     in order to avoid unnecessarily installing the heavy `Dist::Zilla`
     dependency chain.
+
+## Cutting a release
+
+    carton exec dzil release
+
+This should calculate the new version number, build a new release tarball,
+add a release tag, create the release on GitHub and upload the tarball to it.
+
+You can set the `V` environment variable to force a specific version,
+as described by [Dist::Zilla::Plugin::Git::NextVersion](https://metacpan.org/pod/Dist::Zilla::Plugin::Git::NextVersion).
+
+    V=2.0.0 carton exec dzil release
+
+- Your git remote must be a format GitHub::UploadRelease understands
+
+    Either
+    `ssh://git@github.com/GrantsStreetGroup/$repo.git`
+    or
+    `https://github.com/GrantsStreetGroup/$repo.git`.
+
+    As shown in the "Fetch URL" from `git remote -n $remote`,
+
+- Set `github.user` and either `github.password` or `github.token`
+
+    You should probably use a token instead of your password,
+    which you can get by following
+    [GitHub's instructions](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line).
+
+        git config --global github.user  github_login_name
+        git config --global github.token token_from_instructions_above
 
 # AUTHOR
 
