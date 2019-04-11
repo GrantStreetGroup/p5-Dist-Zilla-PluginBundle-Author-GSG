@@ -4,6 +4,7 @@ use warnings;
 use Test::More;
 
 use Test::DZil;
+use Test::Deep qw();
 
 use Git::Wrapper;
 use File::Temp qw();
@@ -61,7 +62,8 @@ subtest 'Build a basic dist' => sub {
 
     is_json(
         $tzil->slurp_file('build/META.json'),
-        {   name     => 'OurExternal-Package',
+        Test::Deep::superhashof( {
+            name     => 'OurExternal-Package',
             license  => ['artistic_2'],
             abstract => 'ABSTRACT',
             author   => ['Grant Street Group <developers@grantstreet.com>'],
@@ -80,13 +82,7 @@ subtest 'Build a basic dist' => sub {
 
             dynamic_config   => 0,
             x_static_install => 1,
-
-            generated_by            => Test::Deep::ignore(),
-            prereqs                 => Test::Deep::ignore(),
-            'meta-spec'             => Test::Deep::ignore(),
-            x_generated_by_perl     => Test::Deep::ignore(),
-            x_serialization_backend => Test::Deep::ignore(),
-        },
+        } ),
         "Built the expected META.json"
     );
 };
