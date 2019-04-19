@@ -195,7 +195,7 @@ You can override L<Pod::Weaver>'s C<finder> by setting C<pod_finder>.
 =head2 Add Dist::Zilla::PluginBundle::Author::GSG to your cpanfile
 
     on 'develop' => sub {
-        requires 'Dist::Zilla::PluginBundle::Author::GSG',
+        requires 'Dist::Zilla::PluginBundle::Author::GSG';
     };
 
 Doing this in the C<develop> phase will cause the default Makefile
