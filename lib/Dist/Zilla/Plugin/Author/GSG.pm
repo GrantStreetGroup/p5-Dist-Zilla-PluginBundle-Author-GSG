@@ -10,7 +10,7 @@ use namespace::autoclean;
 # VERSION
 
 around 'BUILDARGS' => sub {
-    my ($orig, $self, $args) = @_;
+    my ($orig, $class, $args) = @_;
 
     $args->{zilla}->{authors}
         ||= ['Grant Street Group <developers@grantstreet.com>'];
@@ -32,7 +32,7 @@ around 'BUILDARGS' => sub {
         $args->{zilla}->{_copyright_year} = $year;
     }
 
-    return $self->$orig($args);
+    return $class->$orig($args);
 };
 
 sub provide_license {
