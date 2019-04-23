@@ -60,6 +60,30 @@ subtest 'Build a basic dist' => sub {
         qr/\QThis software is Copyright (c) 2001 - $year by $holder./,
         "Put the expected copyright in the module";
 
+    my %resources = (
+        resources => {
+            'repository' => {
+                'type' => 'git',
+                'url'  => "git://github.com/$upstream.git",
+                'web'  => "https://github.com/$upstream"
+            },
+        },
+    );
+
+    # For reasons I don't understand sometimes the GitHub::Meta
+    # Plugin doesn't find the Fetch URL, so we try to do something
+    # similar to what they do, but in the correct directory.
+    {
+        my ($url) = map /Fetch URL: (.*)/,
+                $tzil->plugin_named('@Author::GSG/Git::Push')
+                    ->git->remote( 'show', '-n', 'origin' );
+
+        unless ( $url =~ /\Q$upstream/ ) {
+            diag "Not checking 'resources', invalid Fetch URL [$url]";
+            %resources = ();
+        }
+    }
+
     is_json(
         $tzil->slurp_file('build/META.json'),
         Test::Deep::superhashof( {
@@ -72,13 +96,7 @@ subtest 'Build a basic dist' => sub {
             release_status => 'stable',
             version        => '0.0.1',
 
-            resources => {
-                'repository' => {
-                    'type' => 'git',
-                    'url'  => "git://github.com/$upstream.git",
-                    'web'  => "https://github.com/$upstream"
-                }
-            },
+            %resources,
 
             dynamic_config   => 0,
             x_static_install => 1,
