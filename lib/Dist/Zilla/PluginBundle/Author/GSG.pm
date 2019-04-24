@@ -12,8 +12,6 @@ use namespace::autoclean;
 sub configure {
     my ($self) = @_;
 
-    my $pod_finder = $self->payload->{pod_finder} || ':InstallModules';
-
     $self->add_bundle( 'Filter' => {
         -bundle => '@Basic',
         -remove => [ qw(
@@ -32,7 +30,6 @@ sub configure {
         'StaticInstall',
 
         [   'PodWeaver' => {
-                finder             => $pod_finder,
                 replacer           => 'replace_with_comment',
                 post_code_replacer => 'replace_with_nothing',
                 config_plugin      => [ '@Default', 'Contributors' ]
@@ -139,7 +136,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [StaticInstall]
 
     [Pod::Weaver]
-    finder = :InstallModules
     replacer = replace_with_comment
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
@@ -190,12 +186,10 @@ L<Git::NextVersion Plugin|Dist::Zilla::Plugin::Git::NextVersion> documentation.
 As above, you need the C<name> and C<[@Author::GSG]> bundle,
 plus any other changes you need.
 
-You can override L<Pod::Weaver>'s C<finder> by setting C<pod_finder>.
-
 =head2 Add Dist::Zilla::PluginBundle::Author::GSG to your cpanfile
 
     on 'develop' => sub {
-        requires 'Dist::Zilla::PluginBundle::Author::GSG',
+        requires 'Dist::Zilla::PluginBundle::Author::GSG';
     };
 
 Doing this in the C<develop> phase will cause the default Makefile

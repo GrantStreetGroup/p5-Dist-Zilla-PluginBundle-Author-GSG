@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version 0.0.4
+version 0.0.5
 
 # SYNOPSIS
 
@@ -94,7 +94,7 @@ You can override [Pod::Weaver](https://metacpan.org/pod/Pod::Weaver)'s `finder` 
 ## Add Dist::Zilla::PluginBundle::Author::GSG to your cpanfile
 
     on 'develop' => sub {
-        requires 'Dist::Zilla::PluginBundle::Author::GSG',
+        requires 'Dist::Zilla::PluginBundle::Author::GSG';
     };
 
 Doing this in the `develop` phase will cause the default Makefile

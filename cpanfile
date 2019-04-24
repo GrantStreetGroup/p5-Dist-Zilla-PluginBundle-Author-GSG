@@ -31,6 +31,7 @@ requires 'Pod::Weaver::Section::Contributors';
 
 on test => sub {
     requires 'Test::DZil';
+    requires 'Test::Deep';
     requires 'File::Temp';
     requires 'File::pushd';
     requires 'Test::Pod', '1.14';
