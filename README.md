@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version 0.0.5
+version 0.0.6
 
 # SYNOPSIS
 
@@ -36,9 +36,10 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [ReadmeAnyFromPod]
 
     [StaticInstall]
+    # mode    from static_install_mode
+    # dry_run from static_install_dry_run
 
     [Pod::Weaver]
-    finder = :InstallModules
     replacer = replace_with_comment
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
@@ -82,14 +83,22 @@ You can set a specific release version with the `V` environment variable,
 as described in the
 [Git::NextVersion Plugin](https://metacpan.org/pod/Dist::Zilla::Plugin::Git::NextVersion) documentation.
 
+# ATTRIBUTES / PARAMETERS
+
+- static\_install\_mode
+
+    Passed to [Dist::Zilla::Plugin::StaticInstall](https://metacpan.org/pod/Dist::Zilla::Plugin::StaticInstall) as `mode`.
+
+- static\_install\_dry\_run
+
+    Passed to [Dist::Zilla::Plugin::StaticInstall](https://metacpan.org/pod/Dist::Zilla::Plugin::StaticInstall) as `dry_run`.
+
 # Setting up a new dist
 
 ## Create your dist.ini
 
 As above, you need the `name` and `[@Author::GSG]` bundle,
 plus any other changes you need.
-
-You can override [Pod::Weaver](https://metacpan.org/pod/Pod::Weaver)'s `finder` by setting `pod_finder`.
 
 ## Add Dist::Zilla::PluginBundle::Author::GSG to your cpanfile
 
