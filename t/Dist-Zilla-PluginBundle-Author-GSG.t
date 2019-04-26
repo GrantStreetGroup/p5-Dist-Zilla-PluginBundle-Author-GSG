@@ -53,6 +53,10 @@ subtest 'Build a basic dist' => sub {
         }
     );
 
+    my $source_git = $tzil->plugin_named('@Author::GSG/Git::Commit')->git;
+    $source_git->add('.');
+    $source_git->commit( -a => { m => "Add new files for Git::GatherDir" });
+
     $tzil->build;
 
     my $built = $tzil->slurp_file('build/lib/External/Package.pm');

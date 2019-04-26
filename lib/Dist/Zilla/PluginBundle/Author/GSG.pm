@@ -17,6 +17,7 @@ sub configure {
         -remove => [ qw(
             MetaYAML
             UploadToCPAN
+            GatherDir
         ) ]
     } );
 
@@ -53,6 +54,7 @@ sub configure {
         'Git::Push',
 
         'Git::Contributors',
+        'Git::GatherDir',
 
         'GitHub::Meta',
         'Author::GSG::GitHub::UploadRelease',
@@ -129,6 +131,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     -bundle = @Basic
     -remove = MetaYAML
     -remove = UploadToCPAN
+    -remove = GatherDir
 
     # The defaults for author and license come from
     #[Author::GSG]
@@ -157,6 +160,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Git::Push]
 
     [Git::Contributors]
+    [Git::GatherDir]
 
     [GitHub::Meta]
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere

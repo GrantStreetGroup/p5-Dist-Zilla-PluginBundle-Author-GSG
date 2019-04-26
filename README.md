@@ -27,6 +27,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     -bundle = @Basic
     -remove = MetaYAML
     -remove = UploadToCPAN
+    -remove = GatherDir
 
     # The defaults for author and license come from
     #[Author::GSG]
@@ -55,6 +56,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [Git::Push]
 
     [Git::Contributors]
+    [Git::GatherDir]
 
     [GitHub::Meta]
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
