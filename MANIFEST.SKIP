@@ -1,28 +1,77 @@
-# Top-level filter (only include the following...)
-^(?!(?:share|script|examples|lib|inc|t|xt|maint)/|(?:(?:Makefile|Build)\.PL|CONTRIBUTING.md|README?|CHANGES|LICENSE|META\.(?:yml|json))$)
 
+#!start included /home/afresh/.plenv-centos6/versions/5.24/lib/perl5/5.24.4/ExtUtils/MANIFEST.SKIP
 # Avoid version control files.
 \bRCS\b
 \bCVS\b
+\bSCCS\b
 ,v$
 \B\.svn\b
+\B\.git\b
+\B\.gitignore\b
 \b_darcs\b
-# (.git or .hg only in top-level, hence it's blocked above)
+\B\.cvsignore$
+
+# Avoid VMS specific MakeMaker generated files
+\bDescrip.MMS$
+\bDESCRIP.MMS$
+\bdescrip.mms$
+
+# Avoid Makemaker generated and utility files.
+\bMANIFEST\.bak
+# \bMakefile$ We need to include share/Makefile
+\bblib/
+\bMakeMaker-\d
+\bpm_to_blib\.ts$
+\bpm_to_blib$
+\bblibdirs\.ts$         # 6.18 through 6.25 generated this
+\b_eumm/                # 7.05_05 and above
+
+# Avoid Module::Build generated and utility files.
+\bBuild$
+\b_build/
+\bBuild.bat$
+\bBuild.COM$
+\bBUILD.COM$
+\bbuild.com$
+
+# and Module::Build::Tiny generated files
+\b_build_params$
 
 # Avoid temp and backup files.
 ~$
-\.tmp$
 \.old$
-\.bak$
-\..*?\.sw[po]$
 \#$
 \b\.#
-\b\.nfs.
+\.bak$
+\.tmp$
+\.#
+\.rej$
+\..*\.sw.?$
 
-# avoid OS X finder files
-\.DS_Store$
+# Avoid OS-specific files/dirs
+# Mac OSX metadata
+\B\.DS_Store
+# Mac OSX SMB mount metadata files
+\B\._
 
-# ditto for Windows
+# Avoid Devel::Cover and Devel::CoverX::Covered files.
+\bcover_db\b
+\bcovered\b
+
+# Avoid prove files
+\B\.prove$
+
+# Avoid MYMETA files
+^MYMETA\.
+#!end included /home/afresh/.plenv-centos6/versions/5.24/lib/perl5/5.24.4/ExtUtils/MANIFEST.SKIP
+
+
+# Avoid files used when modifying the dist
+^Makefile$
+^README.md$
+^LICENSE.txt$
+
+# avoid Windows explorer files
 \bdesktop\.ini$
 \b[Tt]humbs\.db$
 
@@ -31,6 +80,7 @@
 \.rej$
 
 # Avoid plenv/carton files
+\.build$
 \bcpanfile\.snapshot$
 \blocal$
 \.perl-.*(\.installed|\.tested|version)$

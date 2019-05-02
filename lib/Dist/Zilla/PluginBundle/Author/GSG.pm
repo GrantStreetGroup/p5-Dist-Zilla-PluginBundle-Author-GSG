@@ -17,6 +17,7 @@ sub configure {
         -remove => [ qw(
             MetaYAML
             UploadToCPAN
+            GatherDir
         ) ]
     } );
 
@@ -27,7 +28,11 @@ sub configure {
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
 
-        'StaticInstall',
+        [   'StaticInstall' => $self->config_slice(
+            {   static_install_mode    => 'mode',
+                static_install_dry_run => 'dry_run',
+            }
+        ) ],
 
         [   'PodWeaver' => {
                 replacer           => 'replace_with_comment',
@@ -49,6 +54,7 @@ sub configure {
         'Git::Push',
 
         'Git::Contributors',
+        'Git::GatherDir',
 
         'GitHub::Meta',
         'Author::GSG::GitHub::UploadRelease',
@@ -125,6 +131,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     -bundle = @Basic
     -remove = MetaYAML
     -remove = UploadToCPAN
+    -remove = GatherDir
 
     # The defaults for author and license come from
     #[Author::GSG]
@@ -134,6 +141,8 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [ReadmeAnyFromPod]
 
     [StaticInstall]
+    # mode    from static_install_mode
+    # dry_run from static_install_dry_run
 
     [Pod::Weaver]
     replacer = replace_with_comment
@@ -151,6 +160,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Git::Push]
 
     [Git::Contributors]
+    [Git::GatherDir]
 
     [GitHub::Meta]
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
@@ -178,6 +188,20 @@ and then run C<carton exec dzil release>.
 You can set a specific release version with the C<V> environment variable,
 as described in the
 L<Git::NextVersion Plugin|Dist::Zilla::Plugin::Git::NextVersion> documentation.
+
+=head1 ATTRIBUTES / PARAMETERS
+
+=over
+
+=item static_install_mode
+
+Passed to L<Dist::Zilla::Plugin::StaticInstall> as C<mode>.
+
+=item static_install_dry_run
+
+Passed to L<Dist::Zilla::Plugin::StaticInstall> as C<dry_run>.
+
+=back
 
 =head1 Setting up a new dist
 
