@@ -4,11 +4,12 @@
 
 DIST_NAME   ?= $(shell perl -ne '/^\s*name\s*=\s*(\S+)/ && print $$1' dist.ini )
 MAIN_MODULE ?= $(shell perl -ne '/^\s*main_module\s*=\s*(\S+)/ && print $$1' dist.ini )
+
+CARTON      ?= $(shell which carton 2>/dev/null || echo REQUIRE_CARTON )
 SHARE_DIR   ?= $(shell \
-  carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
+  $(CARTON) exec -- perl -Ilib -MFile::ShareDir=dist_dir -e \
     'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") }' 2>/dev/null )
 
-CARTON            ?= $(shell which carton 2>/dev/null || echo REQUIRE_CARTON )
 CPANFILE_SNAPSHOT ?= $(shell \
   carton exec perl -MFile::Spec -e \
 	'($$_) = grep { -e } map{ "$$_/../../cpanfile.snapshot" } \
