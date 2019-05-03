@@ -5,7 +5,7 @@
 DIST_NAME   ?= $(shell perl -ne '/^\s*name\s*=\s*(\S+)/ && print $$1' dist.ini )
 MAIN_MODULE ?= $(shell perl -ne '/^\s*main_module\s*=\s*(\S+)/ && print $$1' dist.ini )
 
-CARTON      ?= $(shell which carton 2>/dev/null || echo REQUIRE_CARTON )
+CARTON      ?= $(shell which carton 2>/dev/null || echo carton )
 SHARE_DIR   ?= $(shell \
   $(CARTON) exec -- perl -Ilib -MFile::ShareDir=dist_dir -e \
     'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") }' 2>/dev/null )
@@ -41,7 +41,7 @@ else
 	MAKEFILE_TARGET := ""
 endif
 
-.PHONY : test clean realclean develop REQUIRE_CARTON
+.PHONY : test clean realclean develop carton
 
 test : $(CPANFILE_SNAPSHOT)
 	@nice $(CARTON) exec prove -lfr t
@@ -81,6 +81,6 @@ $(CPANFILE_SNAPSHOT): $(CARTON) cpanfile
 develop: $(CPANFILE_SNAPSHOT)
 	$(CARTON) install # with develop
 
-REQUIRE_CARTON:
+carton:
 	@echo You must install carton: https://metacpan.org/pod/Carton >&2;
 	@false;
