@@ -25,6 +25,7 @@ sub configure {
         'Author::GSG',
 
         'MetaJSON',
+        'OurPkgVersion',
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
 
