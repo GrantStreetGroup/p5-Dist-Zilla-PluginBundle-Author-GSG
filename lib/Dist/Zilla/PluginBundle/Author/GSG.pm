@@ -138,6 +138,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     #[Author::GSG]
 
     [MetaJSON]
+    [OurPkgVersion]
     [Prereqs::FromCPANfile]
     [ReadmeAnyFromPod]
 

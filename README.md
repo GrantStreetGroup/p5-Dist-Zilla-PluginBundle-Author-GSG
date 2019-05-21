@@ -33,6 +33,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     #[Author::GSG]
 
     [MetaJSON]
+    [OurPkgVersion]
     [Prereqs::FromCPANfile]
     [ReadmeAnyFromPod]
 
