@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version 0.0.6
+version 0.0.7
 
 # SYNOPSIS
 
@@ -234,6 +234,7 @@ This is free software, licensed under:
 
     The Artistic License 2.0 (GPL Compatible)
 
-# CONTRIBUTOR
+# CONTRIBUTORS
 
-Andrew Fresh <andrew.fresh@grantstreet.com>
+- Andrew Fresh <andrew.fresh@grantstreet.com>
+- Mark Flickinger <mark.flickinger@grantstreet.com>
