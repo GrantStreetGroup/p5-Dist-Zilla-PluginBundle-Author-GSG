@@ -4,16 +4,20 @@
 
 DIST_NAME   ?= $(shell perl -ne '/^\s*name\s*=\s*(\S+)/ && print $$1' dist.ini )
 MAIN_MODULE ?= $(shell perl -ne '/^\s*main_module\s*=\s*(\S+)/ && print $$1' dist.ini )
+
+CARTON      ?= $(shell which carton 2>/dev/null || echo carton )
 SHARE_DIR   ?= $(shell \
-  carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
+  $(CARTON) exec -- perl -Ilib -MFile::ShareDir=dist_dir -e \
     'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") }' 2>/dev/null )
 
-CARTON            ?= $(shell which carton 2>/dev/null || echo REQUIRE_CARTON )
 CPANFILE_SNAPSHOT ?= $(shell \
   carton exec perl -MFile::Spec -e \
 	'($$_) = grep { -e } map{ "$$_/../../cpanfile.snapshot" } \
 		grep { m(/lib/perl5$$) } @INC; \
 		print File::Spec->abs2rel($$_) . "\n" if $$_' 2>/dev/null )
+
+ON_DEVELOP := $(shell $(CARTON) exec -- \
+	dzil nop >/dev/null 2>/dev/null && echo $(CARTON) || echo develop )
 
 ifeq ($(MAIN_MODULE),)
 MAIN_MODULE := lib/$(subst -,/,$(DIST_NAME)).pm
@@ -37,7 +41,7 @@ else
 	MAKEFILE_TARGET := ""
 endif
 
-.PHONY : test clean realclean REQUIRE_CARTON
+.PHONY : test clean realclean develop carton
 
 test : $(CPANFILE_SNAPSHOT)
 	@nice $(CARTON) exec prove -lfr t
@@ -61,10 +65,10 @@ realclean: clean
 update: README.md LICENSE.txt $(EXTRA_UPDATES)
 	@echo Everything is up to date
 
-README.md: $(MAIN_MODULE) dist.ini $(CPANFILE_SNAPSHOT)
+README.md: $(MAIN_MODULE) dist.ini $(ON_DEVELOP)
 	$(CARTON) exec dzil run sh -c "pod2markdown $< > ${CURDIR}/$@"
 
-LICENSE.txt: dist.ini $(CPANFILE_SNAPSHOT)
+LICENSE.txt: dist.ini $(ON_DEVELOP)
 	$(CARTON) exec dzil run sh -c "install -m 644 LICENSE ${CURDIR}/$@"
 
 .SECONDEXPANSION:
@@ -74,6 +78,9 @@ $(CONTRIB): $(SHARE_DIR)/$$(@)
 $(CPANFILE_SNAPSHOT): $(CARTON) cpanfile
 	$(CARTON) install $(CARTON_INSTALL_FLAGS)
 
-REQUIRE_CARTON:
+develop: $(CPANFILE_SNAPSHOT)
+	$(CARTON) install # with develop
+
+carton:
 	@echo You must install carton: https://metacpan.org/pod/Carton >&2;
 	@false;
