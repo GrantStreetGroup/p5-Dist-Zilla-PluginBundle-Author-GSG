@@ -40,6 +40,11 @@ else ifeq ($(firstword $(MAKEFILE_LIST)),$(lastword $(MAKEFILE_LIST)))
 else
 	MAKEFILE_TARGET := ""
 endif
+ifeq ($(MAKEFILE_TARGET),)
+	MAKEFILE_SHARE := ""
+else
+	MAKEFILE_SHARE := $(wildcard $(SHARE_DIR)/Makefile*)
+endif
 
 .PHONY : test clean realclean develop carton
 
@@ -51,7 +56,7 @@ test : $(CPANFILE_SNAPSHOT)
 testcoverage : $(CPANFILE_SNAPSHOT)
 	$(CARTON) exec -- cover -test -ignore . -select ^lib
 
-$(MAKEFILE_TARGET): $(SHARE_DIR)/Makefile
+$(MAKEFILE_TARGET): $(MAKEFILE_SHARE)
 	install -m 644 $< $@
 	@echo Makefile updated>&2
 
