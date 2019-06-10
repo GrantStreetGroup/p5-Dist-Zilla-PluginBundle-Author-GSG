@@ -241,7 +241,7 @@ might look like this:
     # Copy the SHARE_DIR Makefile over this one:
     # Making it .PHONY will force it to copy even if this one is newer.
     .PHONY: Makefile
-    Makefile: $(SHARE_DIR)/Makefile
+    Makefile: $(SHARE_DIR)/Makefile.inc
     	cp $< $@
 
 Using this example Makefile does require you run C<carton install> after
@@ -272,8 +272,10 @@ so you will need to add it to the cpanfile temporarily for this target to work.
 
 =item Makefile
 
-Copies the Makefile included in this PluginBundle's C<share_dir> into
-your distribution.
+Copies the C<Makefile.inc> included in this PluginBundle's C<share_dir>
+into your distribution.
+
+This should happen automatically through the magic of C<make>.
 
 =item update
 

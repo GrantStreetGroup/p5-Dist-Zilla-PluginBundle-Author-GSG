@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version 0.0.9
+version 0.0.10
 
 # SYNOPSIS
 
@@ -132,7 +132,7 @@ might look like this:
     # Copy the SHARE_DIR Makefile over this one:
     # Making it .PHONY will force it to copy even if this one is newer.
     .PHONY: Makefile
-    Makefile: $(SHARE_DIR)/Makefile
+    Makefile: $(SHARE_DIR)/Makefile.inc
         cp $< $@
 
 Using this example Makefile does require you run `carton install` after
@@ -161,8 +161,10 @@ Some of the targets that are included in the Makefile are:
 
 - Makefile
 
-    Copies the Makefile included in this PluginBundle's `share_dir` into
-    your distribution.
+    Copies the `Makefile.inc` included in this PluginBundle's `share_dir`
+    into your distribution.
+
+    This should happen automatically through the magic of `make`.
 
 - update
 
