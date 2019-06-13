@@ -43,6 +43,8 @@ subtest 'Build a basic dist' => sub {
         { dist_root => 'corpus/dist/basic' },
         {   also_copy => { $dir => 'source' },
             add_files => {
+                'source/cpanfile' =>
+                    "requires 'perl', 'v5.10.0';",
                 'source/dist.ini' => dist_ini(
                     { name => 'OurExternal-Package' },
                     '@Author::GSG',
@@ -96,6 +98,8 @@ subtest 'Build a basic dist' => sub {
 
         version        => '0.0.1',
 
+        requires => { perl => 'v5.10.0' },
+
         dynamic_config   => 0,
         x_static_install => 1,
     );
@@ -111,6 +115,10 @@ subtest 'Build a basic dist' => sub {
     );
 
     %expect = (
+        prereqs => Test::Deep::superhashof(
+            { runtime => { requires => delete $expect{requires} } }
+        ),
+
         %expect,
         license        => ['artistic_2'],
         release_status => 'stable',

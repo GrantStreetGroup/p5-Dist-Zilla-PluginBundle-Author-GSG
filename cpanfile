@@ -1,3 +1,5 @@
+requires 'perl', 'v5.14.0'; # for kwalitee
+
 requires 'Moose';
 requires 'namespace::autoclean';
 
