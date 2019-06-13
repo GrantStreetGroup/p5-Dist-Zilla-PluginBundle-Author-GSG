@@ -15,7 +15,6 @@ sub configure {
     $self->add_bundle( 'Filter' => {
         -bundle => '@Basic',
         -remove => [ qw(
-            MetaYAML
             UploadToCPAN
             GatherDir
         ) ]
@@ -130,7 +129,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [@Filter]
     -bundle = @Basic
-    -remove = MetaYAML
     -remove = UploadToCPAN
     -remove = GatherDir
 

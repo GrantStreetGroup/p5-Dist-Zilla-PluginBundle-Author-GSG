@@ -88,23 +88,38 @@ subtest 'Build a basic dist' => sub {
         }
     }
 
+    my %expect = (
+        name           => 'OurExternal-Package',
+        abstract       => 'ABSTRACT',
+        author         => ['Grant Street Group <developers@grantstreet.com>'],
+        x_contributors => [$contributor],
+
+        version        => '0.0.1',
+
+        dynamic_config   => 0,
+        x_static_install => 1,
+    );
+
+    # the YAML only has the git repository, not the rest.
+    $expect{resources}{repository} = $resources{resources}{repository}{url}
+        if %resources;
+
+    is_yaml(
+        $tzil->slurp_file('build/META.yml'),
+        Test::Deep::superhashof(\%expect),
+        "Built the expected META.yml"
+    );
+
+    %expect = (
+        %expect,
+        license        => ['artistic_2'],
+        release_status => 'stable',
+        %resources,
+    );
+
     is_json(
         $tzil->slurp_file('build/META.json'),
-        Test::Deep::superhashof( {
-            name     => 'OurExternal-Package',
-            license  => ['artistic_2'],
-            abstract => 'ABSTRACT',
-            author   => ['Grant Street Group <developers@grantstreet.com>'],
-            x_contributors => [$contributor],
-
-            release_status => 'stable',
-            version        => '0.0.1',
-
-            %resources,
-
-            dynamic_config   => 0,
-            x_static_install => 1,
-        } ),
+        Test::Deep::superhashof(\%expect),
         "Built the expected META.json"
     );
 };
