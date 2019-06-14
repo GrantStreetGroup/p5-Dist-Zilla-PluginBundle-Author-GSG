@@ -17,6 +17,7 @@ requires 'Dist::Zilla::Plugin::StaticInstall';
 requires 'Dist::Zilla::Plugin::OurPkgVersion';
 requires 'Dist::Zilla::Plugin::Prereqs::FromCPANfile';
 requires 'Dist::Zilla::Plugin::ReadmeAnyFromPod';
+requires 'Dist::Zilla::Plugin::MetaProvides::Package';
 
 requires 'Dist::Zilla::Plugin::GitHub::Meta', '0.46';
 requires 'Dist::Zilla::Plugin::GitHub::UploadRelease';

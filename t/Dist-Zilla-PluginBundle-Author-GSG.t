@@ -96,9 +96,15 @@ subtest 'Build a basic dist' => sub {
         author         => ['Grant Street Group <developers@grantstreet.com>'],
         x_contributors => [$contributor],
 
-        version        => '0.0.1',
+        version => '0.0.1',
 
         requires => { perl => 'v5.10.0' },
+        provides => {
+            "External::Package" => {
+                file    => "lib/External/Package.pm",
+                version => "v0.0.1"
+            }
+        },
 
         dynamic_config   => 0,
         x_static_install => 1,
@@ -129,6 +135,36 @@ subtest 'Build a basic dist' => sub {
         $tzil->slurp_file('build/META.json'),
         Test::Deep::superhashof(\%expect),
         "Built the expected META.json"
+    );
+};
+
+subtest "Override MetaProvides subclass" => sub {
+    {   package Dist::Zilla::Plugin::MetaProvides::Fake;
+        use Moose;
+        with 'Dist::Zilla::Role::MetaProvider';
+        sub metadata { +{} }
+    }
+
+    my $tzil = Builder->from_config(
+        { dist_root => 'corpus/dist/metaprovides_subclass' },
+        {   add_files => {
+                'source/dist.ini' => dist_ini(
+                    { name           => 'External-Fake' },
+                    [ '@Author::GSG' => { meta_provides => 'Fake' } ],
+                ),
+                'source/lib/External/Fake.pm' =>
+                    "package External::Fake;\n# ABSTRACT: ABSTRACT\n1;",
+            }
+        }
+    );
+
+    my @meta_provides_plugins = grep {/\bMetaProvides\b/}
+        map { $_->plugin_name } @{ $tzil->plugins_with( -MetaProvider ) };
+
+    Test::Deep::cmp_bag(
+        \@meta_provides_plugins,
+        ['@Author::GSG/MetaProvides::Fake'],
+        "Correctly only have the fake MetaProvides Plugin"
     );
 };
 
