@@ -11,24 +11,25 @@ use File::Temp qw();
 use File::pushd qw();
 
 use lib qw(lib);
-my $module;
-BEGIN {
-    $module = 'Dist::Zilla::PluginBundle::Author::GSG';
-    use_ok($module);
+use Dist::Zilla::PluginBundle::Author::GSG;
+
+{
+    my $git = Git::Wrapper->new('.');
+    plan skip_all => "No Git!" unless $git->has_git_in_path;
+
+    my $version = $git->version;
+    plan skip_all => "Git is too old: $version"
+        if $version < version->parse(v1.7.5);
 }
 
 my $year   = 1900 + (localtime)[5];
 my $holder = 'Grant Street Group';
-
-#diag( "Testing $module " . $module->VERSION );
 
 subtest 'Build a basic dist' => sub {
     my $dir = File::Temp->newdir("dzpbag-XXXXXXXXX");
 
     #local $Git::Wrapper::DEBUG = 1;
     my $git = Git::Wrapper->new($dir);
-    plan skip_all => "No Git!" unless $git->has_git_in_path;
-
     my $upstream = 'GrantStreetGroup/p5-OurExternal-Package';
 
     $git->init;

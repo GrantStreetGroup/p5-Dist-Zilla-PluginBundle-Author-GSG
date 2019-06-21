@@ -1,6 +1,7 @@
 requires 'perl', 'v5.14.0'; # for kwalitee
 
 requires 'Moose';
+requires 'version';
 requires 'namespace::autoclean';
 
 requires 'Dist::Zilla';
