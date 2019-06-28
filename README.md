@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version 0.0.10
+version 0.0.11
 
 # SYNOPSIS
 
@@ -25,7 +25,6 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
 
     [@Filter]
     -bundle = @Basic
-    -remove = MetaYAML
     -remove = UploadToCPAN
     -remove = GatherDir
 
@@ -36,6 +35,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [OurPkgVersion]
     [Prereqs::FromCPANfile]
     [ReadmeAnyFromPod]
+    [$meta_provides] # defaults to MetaProvides::Package
 
     [StaticInstall]
     # mode    from static_install_mode
@@ -87,6 +87,18 @@ as described in the
 [Git::NextVersion Plugin](https://metacpan.org/pod/Dist::Zilla::Plugin::Git::NextVersion) documentation.
 
 # ATTRIBUTES / PARAMETERS
+
+- meta\_provides
+
+        [@Author::GSG]
+        meta_provides = Class
+
+    The [MetaProvides](https://metacpan.org/pod/Dist::Zilla::Plugin::MetaProvides) subclass to use.
+
+    Defaults to `Package|Dist::Zilla::Plugin::MetaProvides::Package`.
+
+    If you choose something other than the default,
+    you will need to add an "on develop" dependency to your `cpanfile`.
 
 - static\_install\_mode
 

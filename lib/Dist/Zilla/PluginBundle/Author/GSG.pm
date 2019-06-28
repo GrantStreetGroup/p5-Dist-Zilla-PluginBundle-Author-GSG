@@ -12,10 +12,12 @@ use namespace::autoclean;
 sub configure {
     my ($self) = @_;
 
+    my $meta_provides
+        = 'MetaProvides::' . ( $self->payload->{meta_provides} || 'Package' );
+
     $self->add_bundle( 'Filter' => {
         -bundle => '@Basic',
         -remove => [ qw(
-            MetaYAML
             UploadToCPAN
             GatherDir
         ) ]
@@ -28,6 +30,7 @@ sub configure {
         'OurPkgVersion',
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
+        $meta_provides,
 
         [   'StaticInstall' => $self->config_slice(
             {   static_install_mode    => 'mode',
@@ -130,7 +133,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [@Filter]
     -bundle = @Basic
-    -remove = MetaYAML
     -remove = UploadToCPAN
     -remove = GatherDir
 
@@ -141,6 +143,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [OurPkgVersion]
     [Prereqs::FromCPANfile]
     [ReadmeAnyFromPod]
+    [$meta_provides] # defaults to MetaProvides::Package
 
     [StaticInstall]
     # mode    from static_install_mode
@@ -194,6 +197,18 @@ L<Git::NextVersion Plugin|Dist::Zilla::Plugin::Git::NextVersion> documentation.
 =head1 ATTRIBUTES / PARAMETERS
 
 =over
+
+=item meta_provides
+
+    [@Author::GSG]
+    meta_provides = Class
+
+The L<MetaProvides|Dist::Zilla::Plugin::MetaProvides> subclass to use.
+
+Defaults to C<Package|Dist::Zilla::Plugin::MetaProvides::Package>.
+
+If you choose something other than the default,
+you will need to add an "on develop" dependency to your C<cpanfile>.
 
 =item static_install_mode
 
