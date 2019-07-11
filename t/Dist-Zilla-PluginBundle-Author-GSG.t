@@ -14,6 +14,7 @@ use lib qw(lib);
 use Dist::Zilla::PluginBundle::Author::GSG;
 
 $ENV{EMAIL} = 'fake@example.com'; # force a default for git
+delete $ENV{V}; # because it could mess up Git::NextVersion
 
 {
     my $git = Git::Wrapper->new('.');
