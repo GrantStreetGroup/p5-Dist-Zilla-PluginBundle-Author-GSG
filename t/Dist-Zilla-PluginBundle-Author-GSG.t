@@ -13,6 +13,8 @@ use File::pushd qw();
 use lib qw(lib);
 use Dist::Zilla::PluginBundle::Author::GSG;
 
+$ENV{EMAIL} = 'fake@example.com'; # force a default for git
+
 {
     my $git = Git::Wrapper->new('.');
     plan skip_all => "No Git!" unless $git->has_git_in_path;

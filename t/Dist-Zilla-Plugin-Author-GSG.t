@@ -13,6 +13,7 @@ use version;
 use lib qw(lib);
 use Dist::Zilla::Plugin::Author::GSG;
 
+$ENV{EMAIL} = 'fake@example.com'; # force a default for git
 #$Git::Wrapper::DEBUG = 1;
 
 my $dir = File::Temp->newdir("dzpag-XXXXXXXXX");
