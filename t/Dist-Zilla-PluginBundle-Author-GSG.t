@@ -20,6 +20,8 @@ use Dist::Zilla::PluginBundle::Author::GSG;
     my $version = $git->version;
     plan skip_all => "Git is too old: $version"
         if $version < version->parse(v1.7.5);
+
+    diag "Have git $version";
 }
 
 my $year   = 1900 + (localtime)[5];

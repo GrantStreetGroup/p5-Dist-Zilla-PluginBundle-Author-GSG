@@ -25,6 +25,8 @@ my $dir = File::Temp->newdir("dzpag-XXXXXXXXX");
     plan skip_all => "Git is too old: $version"
         if $version < version->parse(v1.7.5);
 
+    diag "Have git $version";
+
     $git->init;
     $git->commit( { m => 'init', date => '2001-02-03 04:05:06' },
         '--allow-empty' );
