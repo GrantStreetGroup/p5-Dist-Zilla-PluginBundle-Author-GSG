@@ -27,7 +27,9 @@ sub configure {
         'Author::GSG',
 
         'MetaJSON',
-        'OurPkgVersion',
+        [ 'OurPkgVersion' => {
+            semantic_version => 1,
+        } ],
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
         $meta_provides,
@@ -44,11 +46,12 @@ sub configure {
         } ],
 
         [ 'ChangelogFromGit' => {
-            tag_regexp => '^v(\d+\.\d+\.\d+)$'
+            tag_regexp => '^(v\d+\.\d+\.\d+)$'
         } ],
 
         [ 'Git::NextVersion' => {
-            first_version => '0.0.1',
+            first_version  => 'v0.0.1',
+            version_regexp => '^(v\d+\.\d+\.\d+)$',
         } ],
 
         'Git::Commit',
@@ -153,10 +156,11 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     config_plugin = [ @Default, Contributors ]
 
     [ChangelogFromGit]
-    tag_regexp = ^v(\d+\.\d+\.\d+)$
+    tag_regexp = ^(v\d+\.\d+\.\d+)$
 
     [Git::NextVersion]
-    first_version = 0.0.1
+    first_version  = v0.0.1
+    version_regexp = ^(v\d+\.\d+\.\d+)$
 
     [Git::Commit]
     [Git::Tag]
