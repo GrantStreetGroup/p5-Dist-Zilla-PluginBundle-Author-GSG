@@ -32,18 +32,16 @@ sub configure {
         'ReadmeAnyFromPod',
         $meta_provides,
 
-        [   'StaticInstall' => $self->config_slice(
-            {   static_install_mode    => 'mode',
-                static_install_dry_run => 'dry_run',
-            }
-        ) ],
+        [ 'StaticInstall' => $self->config_slice( {
+            static_install_mode    => 'mode',
+            static_install_dry_run => 'dry_run',
+        } ) ],
 
-        [   'PodWeaver' => {
-                replacer           => 'replace_with_comment',
-                post_code_replacer => 'replace_with_nothing',
-                config_plugin      => [ '@Default', 'Contributors' ]
-            }
-        ],
+        [ 'PodWeaver' => {
+            replacer           => 'replace_with_comment',
+            post_code_replacer => 'replace_with_nothing',
+            config_plugin      => [ '@Default', 'Contributors' ]
+        } ],
 
         [ 'ChangelogFromGit' => {
             tag_regexp => '^v(\d+\.\d+\.\d+)$'
