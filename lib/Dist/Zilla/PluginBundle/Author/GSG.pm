@@ -27,30 +27,31 @@ sub configure {
         'Author::GSG',
 
         'MetaJSON',
-        'OurPkgVersion',
+        [ 'OurPkgVersion' => {
+            semantic_version => 1,
+        } ],
         'Prereqs::FromCPANfile',
         'ReadmeAnyFromPod',
         $meta_provides,
 
-        [   'StaticInstall' => $self->config_slice(
-            {   static_install_mode    => 'mode',
-                static_install_dry_run => 'dry_run',
-            }
-        ) ],
+        [ 'StaticInstall' => $self->config_slice( {
+            static_install_mode    => 'mode',
+            static_install_dry_run => 'dry_run',
+        } ) ],
 
-        [   'PodWeaver' => {
-                replacer           => 'replace_with_comment',
-                post_code_replacer => 'replace_with_nothing',
-                config_plugin      => [ '@Default', 'Contributors' ]
-            }
-        ],
+        [ 'PodWeaver' => {
+            replacer           => 'replace_with_comment',
+            post_code_replacer => 'replace_with_nothing',
+            config_plugin      => [ '@Default', 'Contributors' ]
+        } ],
 
         [ 'ChangelogFromGit' => {
-            tag_regexp => '^v(\d+\.\d+\.\d+)$'
+            tag_regexp => '^(v\d+\.\d+\.\d+)$'
         } ],
 
         [ 'Git::NextVersion' => {
-            first_version => '0.0.1',
+            first_version  => 'v0.0.1',
+            version_regexp => '^(v\d+\.\d+\.\d+)$',
         } ],
 
         'Git::Commit',
@@ -155,10 +156,11 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     config_plugin = [ @Default, Contributors ]
 
     [ChangelogFromGit]
-    tag_regexp = ^v(\d+\.\d+\.\d+)$
+    tag_regexp = ^(v\d+\.\d+\.\d+)$
 
     [Git::NextVersion]
-    first_version = 0.0.1
+    first_version  = v0.0.1
+    version_regexp = ^(v\d+\.\d+\.\d+)$
 
     [Git::Commit]
     [Git::Tag]

@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version 0.0.11
+version v0.0.13
 
 # SYNOPSIS
 
@@ -47,10 +47,11 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     config_plugin = [ @Default, Contributors ]
 
     [ChangelogFromGit]
-    tag_regexp = ^v(\d+\.\d+\.\d+)$
+    tag_regexp = ^(v\d+\.\d+\.\d+)$
 
     [Git::NextVersion]
-    first_version = 0.0.1
+    first_version  = v0.0.1
+    version_regexp = ^(v\d+\.\d+\.\d+)$
 
     [Git::Commit]
     [Git::Tag]
