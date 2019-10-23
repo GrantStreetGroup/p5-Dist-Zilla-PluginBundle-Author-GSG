@@ -15,7 +15,7 @@ Your `dist.ini` can be as short as this:
 
 Which is equivalent to all of this:
 
-Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org/pod/Dist::Zilla::Plugin::Author::GSG).
+Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AAuthor%3A%3AGSG).
 
     name = Foo-Bar-GSG
     author = Grant Street Group <developers@grantstreet.com>
@@ -27,6 +27,10 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     -bundle = @Basic
     -remove = UploadToCPAN
     -remove = GatherDir
+
+    # The MakeMaker Plugin gets an additional setting
+    # in order to support "version ranges".
+    eumm_version = 7.1101
 
     # The defaults for author and license come from
     #[Author::GSG]
@@ -85,7 +89,7 @@ any included documents, commit those,
 and then run `carton exec dzil release`.
 You can set a specific release version with the `V` environment variable,
 as described in the
-[Git::NextVersion Plugin](https://metacpan.org/pod/Dist::Zilla::Plugin::Git::NextVersion) documentation.
+[Git::NextVersion Plugin](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3ANextVersion) documentation.
 
 # ATTRIBUTES / PARAMETERS
 
@@ -94,7 +98,7 @@ as described in the
         [@Author::GSG]
         meta_provides = Class
 
-    The [MetaProvides](https://metacpan.org/pod/Dist::Zilla::Plugin::MetaProvides) subclass to use.
+    The [MetaProvides](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AMetaProvides) subclass to use.
 
     Defaults to `Package|Dist::Zilla::Plugin::MetaProvides::Package`.
 
@@ -103,11 +107,11 @@ as described in the
 
 - static\_install\_mode
 
-    Passed to [Dist::Zilla::Plugin::StaticInstall](https://metacpan.org/pod/Dist::Zilla::Plugin::StaticInstall) as `mode`.
+    Passed to [Dist::Zilla::Plugin::StaticInstall](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AStaticInstall) as `mode`.
 
 - static\_install\_dry\_run
 
-    Passed to [Dist::Zilla::Plugin::StaticInstall](https://metacpan.org/pod/Dist::Zilla::Plugin::StaticInstall) as `dry_run`.
+    Passed to [Dist::Zilla::Plugin::StaticInstall](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AStaticInstall) as `dry_run`.
 
 # Setting up a new dist
 
@@ -168,7 +172,7 @@ Some of the targets that are included in the Makefile are:
 
 - testcoverage
 
-    This target runs your tests under the [Devel::Cover](https://metacpan.org/pod/Devel::Cover) `cover` utility.
+    This target runs your tests under the [Devel::Cover](https://metacpan.org/pod/Devel%3A%3ACover) `cover` utility.
     However, `Devel::Cover` is not normally a dependency,
     so you will need to add it to the cpanfile temporarily for this target to work.
 
@@ -215,7 +219,7 @@ This should calculate the new version number, build a new release tarball,
 add a release tag, create the release on GitHub and upload the tarball to it.
 
 You can set the `V` environment variable to force a specific version,
-as described by [Dist::Zilla::Plugin::Git::NextVersion](https://metacpan.org/pod/Dist::Zilla::Plugin::Git::NextVersion).
+as described by [Dist::Zilla::Plugin::Git::NextVersion](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3ANextVersion).
 
     V=2.0.0 carton exec dzil release
 
