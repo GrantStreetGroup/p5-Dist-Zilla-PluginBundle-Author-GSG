@@ -60,7 +60,7 @@ sub configure {
 
         [ 'Git::NextVersion' => {
             first_version  => 'v0.0.1',
-            version_regexp => '^(v\d+\.\d+\.\d+)$',
+            version_regexp => '\b(v\d+\.\d+\.\d+)\b',
         } ],
 
         'Git::Commit',

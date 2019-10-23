@@ -148,6 +148,54 @@ subtest 'Build a basic dist' => sub {
     );
 };
 
+subtest 'NextVersion' => sub {
+    my $dir = File::Temp->newdir("dzpbag-XXXXXXXXX");
+
+    #local $Git::Wrapper::DEBUG = 1;
+    my $git = Git::Wrapper->new($dir);
+    my $upstream = 'GrantStreetGroup/p5-Versioned-Package';
+
+    $git->init;
+    $git->remote( qw/ add origin /,
+        "https://fake-github.com/$upstream.git" );
+    $git->commit( { m => 'init', date => '2001-02-03 04:05:06' },
+        '--allow-empty' );
+
+    my $tzil = Builder->from_config(
+        { dist_root => 'corpus/dist/versioned' },
+        {   also_copy => { $dir => 'source' },
+            add_files => {
+                'source/dist.ini' => dist_ini(
+                    { name => 'Versioned' },
+                    '@Author::GSG',
+                ),
+                'source/lib/Versioned.pm' =>
+                    "package Versioned;\n# ABSTRACT: ABSTRACT\n# VERSION\n1;",
+            }
+        }
+    );
+
+    is $tzil->version, 'v0.0.1', 'First version is v0.0.1';
+
+    my ($version_plugin)
+        = $tzil->plugin_named('@Author::GSG/Git::NextVersion');
+
+    my @versions = (
+        [ 'v0.0.1'              => 'v0.0.2' ],
+        [ 'v1.2.3.4'            => 'v1.2.4' ],
+        [ 'dist/v2.31.1.2/prod' => 'v2.31.2' ],
+    );
+
+    for (@versions) {
+        my ($have, $expect) = @{ $_ };
+        delete $version_plugin->{_all_versions};
+
+        $version_plugin->git->tag($have);
+        is $version_plugin->provide_version, $expect,
+            "Version after $have is $expect";
+    }
+};
+
 subtest "Override MetaProvides subclass" => sub {
     {   package Dist::Zilla::Plugin::MetaProvides::Fake;
         use Moose;
