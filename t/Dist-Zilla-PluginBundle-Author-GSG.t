@@ -56,7 +56,7 @@ subtest 'Build a basic dist' => sub {
                     '@Author::GSG',
                 ),
                 'source/lib/External/Package.pm' =>
-                    "package External::Package;\n# ABSTRACT: ABSTRACT\n1;",
+                    "package External::Package;\n# ABSTRACT: ABSTRACT\n# VERSION\n1;",
             }
         }
     );
@@ -71,6 +71,8 @@ subtest 'Build a basic dist' => sub {
     $tzil->build;
 
     my $built = $tzil->slurp_file('build/lib/External/Package.pm');
+    like $built, qr/\nour \$VERSION = 'v0.0.1';/,
+        "Found the correct version in the module";
     like $built,
         qr/\QThis software is Copyright (c) 2001 - $year by $holder./,
         "Put the expected copyright in the module";
