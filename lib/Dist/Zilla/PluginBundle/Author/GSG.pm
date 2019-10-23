@@ -23,6 +23,15 @@ sub configure {
         ) ]
     } );
 
+    # We need to reconfigure the MakeMaker Plugin to require
+    # a new enough version to support "version ranges".
+    # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/215
+    my ($mm)
+        = grep { $_->[1] eq 'Dist::Zilla::Plugin::MakeMaker' }
+        @{ $self->plugins };
+
+    $mm->[2]->{eumm_version} = '7.1101';
+
     $self->add_plugins(
         'Author::GSG',
 
@@ -136,6 +145,10 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     -bundle = @Basic
     -remove = UploadToCPAN
     -remove = GatherDir
+
+    # The MakeMaker Plugin gets an additional setting
+    # in order to support "version ranges".
+    eumm_version = 7.1101
 
     # The defaults for author and license come from
     #[Author::GSG]
