@@ -61,6 +61,9 @@ subtest 'Build a basic dist' => sub {
         }
     );
 
+    is $tzil->plugin_named('@Author::GSG/@Filter/MakeMaker')->eumm_version,
+        '7.1101', "Require a newer ExtUtils::MakeMaker";
+
     my $source_git = Git::Wrapper->new( $tzil->tempdir->child('/source') );
     $source_git->add('.');
     $source_git->commit( -a => { m => "Add new files for Git::GatherDir" });
