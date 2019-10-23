@@ -61,7 +61,7 @@ subtest 'Build a basic dist' => sub {
         }
     );
 
-    my $source_git = $tzil->plugin_named('@Author::GSG/Git::Commit')->git;
+    my $source_git = Git::Wrapper->new( $tzil->tempdir->child('/source') );
     $source_git->add('.');
     $source_git->commit( -a => { m => "Add new files for Git::GatherDir" });
 
@@ -87,8 +87,7 @@ subtest 'Build a basic dist' => sub {
     # similar to what they do, but in the correct directory.
     {
         my ($url) = map /Fetch URL: (.*)/,
-                $tzil->plugin_named('@Author::GSG/Git::Push')
-                    ->git->remote( 'show', '-n', 'origin' );
+            $source_git->remote( 'show', '-n', 'origin' );
 
         unless ( $url =~ /\Q$upstream/ ) {
             diag "Not checking 'resources', invalid Fetch URL [$url]";
@@ -102,7 +101,7 @@ subtest 'Build a basic dist' => sub {
         author         => ['Grant Street Group <developers@grantstreet.com>'],
         x_contributors => [$contributor],
 
-        version => '0.0.1',
+        version => 'v0.0.1',
 
         requires => { perl => 'v5.10.0' },
         provides => {
