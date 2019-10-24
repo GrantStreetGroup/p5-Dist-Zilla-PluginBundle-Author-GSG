@@ -169,11 +169,11 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     config_plugin = [ @Default, Contributors ]
 
     [ChangelogFromGit]
-    tag_regexp = ^(v\d+\.\d+\.\d+)$
+    tag_regexp = \b(v\d+\.\d+\.\d+(?:\.\d+)*)\b
 
     [Git::NextVersion]
     first_version  = v0.0.1
-    version_regexp = ^(v\d+\.\d+\.\d+)$
+    version_regexp = \b(v\d+\.\d+\.\d+)(?:\.\d+)*\b
 
     [Git::Commit]
     [Git::Tag]
@@ -208,6 +208,10 @@ and then run C<carton exec dzil release>.
 You can set a specific release version with the C<V> environment variable,
 as described in the
 L<Git::NextVersion Plugin|Dist::Zilla::Plugin::Git::NextVersion> documentation.
+
+The version regexps for both the Changelog and NextVersion
+should be open enough to pick up the older style tags we used
+as well as incrementing a more strict C<semver>.
 
 =head1 ATTRIBUTES / PARAMETERS
 
