@@ -55,7 +55,7 @@ sub configure {
         } ],
 
         [ 'ChangelogFromGit' => {
-            tag_regexp => '^(v\d+\.\d+\.\d+)$'
+            tag_regexp => '\b(v\d+\.\d+\.\d+(?:\.\d+)*)\b'
         } ],
 
         [ 'Git::NextVersion' => {

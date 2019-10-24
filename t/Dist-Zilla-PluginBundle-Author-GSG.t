@@ -179,6 +179,8 @@ subtest 'NextVersion' => sub {
 
     my ($version_plugin)
         = $tzil->plugin_named('@Author::GSG/Git::NextVersion');
+    my ($changelog_plugin)
+        = $tzil->plugin_named('@Author::GSG/ChangelogFromGit');
 
     my @versions = (
         [ 'v0.0.1'              => 'v0.0.2' ],
@@ -186,14 +188,40 @@ subtest 'NextVersion' => sub {
         [ 'dist/v2.31.1.2/prod' => 'v2.31.2' ],
     );
 
+    my @expected_changes = { changes => ["init\n"] };
     for (@versions) {
         my ($have, $expect) = @{ $_ };
+        sleep 1; # ugh, ChangelogFromGit uses the commit date
         delete $version_plugin->{_all_versions};
+        delete $changelog_plugin->{releases};
 
         $version_plugin->git->tag($have);
+        $version_plugin->git->commit( { m => "Version $expect" },
+            '--allow-empty' );
+
+        $expected_changes[-1]{version} = $have;
+        push @expected_changes, { changes => ["Version $expect\n"] };
+
         is $version_plugin->provide_version, $expect,
             "Version after $have is $expect";
     }
+
+    $version_plugin->git->tag('v3.0.0');
+    $expected_changes[-1]{version} = 'v3.0.0';
+
+    {
+        my $dir = File::pushd::pushd( $version_plugin->git->dir )
+            or die "Unable to chdir source: $!";
+        $changelog_plugin->gather_files;
+    }
+
+    my @got = map { {
+        version => $_->version,
+        changes => [ map { $_->description } @{ $_->changes } ]
+    } } $changelog_plugin->all_releases;
+
+    is_deeply \@got, \@expected_changes,
+        "Expected Changes generated";
 };
 
 subtest "Override MetaProvides subclass" => sub {
