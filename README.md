@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.0.13
+version v0.0.14
 
 # SYNOPSIS
 
@@ -51,11 +51,11 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     config_plugin = [ @Default, Contributors ]
 
     [ChangelogFromGit]
-    tag_regexp = ^(v\d+\.\d+\.\d+)$
+    tag_regexp = \b(v\d+\.\d+\.\d+(?:\.\d+)*)\b
 
     [Git::NextVersion]
     first_version  = v0.0.1
-    version_regexp = ^(v\d+\.\d+\.\d+)$
+    version_regexp = \b(v\d+\.\d+\.\d+)(?:\.\d+)*\b
 
     [Git::Commit]
     [Git::Tag]
@@ -90,6 +90,10 @@ and then run `carton exec dzil release`.
 You can set a specific release version with the `V` environment variable,
 as described in the
 [Git::NextVersion Plugin](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3ANextVersion) documentation.
+
+The version regexps for both the Changelog and NextVersion
+should be open enough to pick up the older style tags we used
+as well as incrementing a more strict `semver`.
 
 # ATTRIBUTES / PARAMETERS
 
