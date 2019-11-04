@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.0.15
+version v0.0.16
 
 # SYNOPSIS
 
@@ -52,6 +52,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
 
     [ChangelogFromGit]
     tag_regexp = \b(v\d+\.\d+\.\d+(?:\.\d+)*)\b
+    exclude_message = (?x: ^Merge \s+ (?: pull \s+ request | (?:remote-tracking\s+)? branch ) \b )
 
     [Git::NextVersion]
     first_version  = v0.0.1
