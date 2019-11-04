@@ -55,7 +55,11 @@ sub configure {
         } ],
 
         [ 'ChangelogFromGit' => {
-            tag_regexp => '\b(v\d+\.\d+\.\d+(?:\.\d+)*)\b'
+            tag_regexp => '\b(v\d+\.\d+\.\d+(?:\.\d+)*)\b',
+            exclude_message => [ q/(?x: ^Merge \s+ (?:
+                pull \s+ request
+              | (?:remote-tracking\s+)? branch # gitc
+            ) \b )/ ],
         } ],
 
         [ 'Git::NextVersion' => {
@@ -170,6 +174,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [ChangelogFromGit]
     tag_regexp = \b(v\d+\.\d+\.\d+(?:\.\d+)*)\b
+    exclude_message = (?x: ^Merge \s+ (?: pull \s+ request | (?:remote-tracking\s+)? branch ) \b )
 
     [Git::NextVersion]
     first_version  = v0.0.1
