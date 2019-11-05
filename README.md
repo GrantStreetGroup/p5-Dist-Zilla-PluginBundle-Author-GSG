@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.0.16
+version v0.0.17
 
 # SYNOPSIS
 
@@ -64,6 +64,9 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
 
     [Git::Contributors]
     [Git::GatherDir]
+    [PruneFiles]
+    filename = README.md
+    filename = LICENSE.txt
 
     [GitHub::Meta]
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
