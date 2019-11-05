@@ -73,6 +73,9 @@ sub configure {
 
         'Git::Contributors',
         'Git::GatherDir',
+        [ 'PruneFiles' => {
+            filename => [ qw< README.md LICENSE.txt > ],
+        } ],
 
         'GitHub::Meta',
         'Author::GSG::GitHub::UploadRelease',
@@ -186,6 +189,9 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [Git::Contributors]
     [Git::GatherDir]
+    [PruneFiles]
+    filename = README.md
+    filename = LICENSE.txt
 
     [GitHub::Meta]
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
