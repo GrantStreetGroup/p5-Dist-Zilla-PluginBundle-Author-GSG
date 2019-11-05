@@ -55,6 +55,8 @@ subtest 'Build a basic dist' => sub {
                     { name => 'OurExternal-Package' },
                     '@Author::GSG',
                 ),
+                'source/README.md'     => 'Excluded',
+                'source/LICENSE.txt'   => 'Excluded',
                 'source/lib/External/Package.pm' =>
                     "package External::Package;\n# ABSTRACT: ABSTRACT\n# VERSION\n1;",
             }
@@ -69,6 +71,22 @@ subtest 'Build a basic dist' => sub {
     $source_git->commit( -a => { m => "Add new files for Git::GatherDir" });
 
     $tzil->build;
+
+    Test::Deep::cmp_bag [ map { $_->name } @{ $tzil->files } ], [
+       'META.yml',
+       'LICENSE',
+       'README',
+       'Makefile.PL',
+       'MANIFEST',
+       'META.json',
+       'CHANGES',
+       'cpanfile',
+       'dist.ini',
+       'lib/External/Package.pm',
+       't/00-compile.t',
+       't/00-report-prereqs.t',
+       't/00-report-prereqs.dd'
+     ], "Gathered the files we expect";
 
     my $built = $tzil->slurp_file('build/lib/External/Package.pm');
     like $built, qr/\nour \$VERSION = 'v0.0.1';/,
