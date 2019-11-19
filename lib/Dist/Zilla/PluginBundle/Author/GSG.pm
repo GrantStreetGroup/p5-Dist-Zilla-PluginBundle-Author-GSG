@@ -153,12 +153,12 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     -remove = UploadToCPAN
     -remove = GatherDir
 
-    # The MakeMaker Plugin gets an additional setting
-    # in order to support "version ranges".
+    ; The MakeMaker Plugin gets an additional setting
+    ; in order to support "version ranges".
     eumm_version = 7.1101
 
-    # The defaults for author and license come from
-    #[Author::GSG]
+    ; The defaults for author and license come from
+    [Author::GSG]
 
     [MetaJSON]
     [OurPkgVersion]
@@ -167,8 +167,8 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [$meta_provides] # defaults to MetaProvides::Package
 
     [StaticInstall]
-    # mode    from static_install_mode
-    # dry_run from static_install_dry_run
+    ; mode    from static_install_mode
+    ; dry_run from static_install_dry_run
 
     [Pod::Weaver]
     replacer = replace_with_comment
