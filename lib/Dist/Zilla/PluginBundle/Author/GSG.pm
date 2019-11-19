@@ -9,6 +9,11 @@ with qw(
 );
 use namespace::autoclean;
 
+sub mvp_multivalue_args { qw(
+    exclude_filename
+    exclude_match
+) }
+
 sub configure {
     my ($self) = @_;
 
@@ -72,7 +77,11 @@ sub configure {
         'Git::Push',
 
         'Git::Contributors',
-        'Git::GatherDir',
+        [ 'Git::GatherDir' => $self->config_slice( qw<
+            exclude_filename
+            exclude_match
+            include_dotfiles
+        > ) ],
         [ 'PruneFiles' => {
             filename => [ qw< README.md LICENSE.txt > ],
         } ],
@@ -189,6 +198,10 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [Git::Contributors]
     [Git::GatherDir]
+    ; include_dotfiles
+    ; exclude_filename
+    ; exclude_match
+
     [PruneFiles]
     filename = README.md
     filename = LICENSE.txt
@@ -247,6 +260,18 @@ Passed to L<Dist::Zilla::Plugin::StaticInstall> as C<mode>.
 =item static_install_dry_run
 
 Passed to L<Dist::Zilla::Plugin::StaticInstall> as C<dry_run>.
+
+=item include_dotfiles
+
+Passed to L<Dist::Zilla::Plugin::Git::GatherDir/include_dotfiles>.
+
+=item exclude_filename
+
+Passed to L<Dist::Zilla::Plugin::Git::GatherDir/exclude_filename>.
+
+=item exclude_match
+
+Passed to L<Dist::Zilla::Plugin::Git::GatherDir/exclude_match>.
 
 =back
 
