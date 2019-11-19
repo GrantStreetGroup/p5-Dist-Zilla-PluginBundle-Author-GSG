@@ -82,9 +82,6 @@ sub configure {
             exclude_match
             include_dotfiles
         > ) ],
-        [ 'PruneFiles' => {
-            filename => [ qw< README.md LICENSE.txt > ],
-        } ],
 
         'GitHub::Meta',
         'Author::GSG::GitHub::UploadRelease',
@@ -92,6 +89,13 @@ sub configure {
         'Test::Compile',
         'Test::ReportPrereqs',
     );
+
+    my ($gather_dir)
+        = grep { $_->[1] eq 'Dist::Zilla::Plugin::Git::GatherDir' }
+        @{ $self->plugins };
+
+    push @{ $gather_dir->[2]->{exclude_filename} },
+        qw< README.md LICENSE.txt >;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -201,10 +205,8 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     ; include_dotfiles
     ; exclude_filename
     ; exclude_match
-
-    [PruneFiles]
-    filename = README.md
-    filename = LICENSE.txt
+    exclude_filename = README.md
+    exclude_filename = LICENSE.txt
 
     [GitHub::Meta]
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
@@ -268,6 +270,8 @@ Passed to L<Dist::Zilla::Plugin::Git::GatherDir/include_dotfiles>.
 =item exclude_filename
 
 Passed to L<Dist::Zilla::Plugin::Git::GatherDir/exclude_filename>.
+
+Automatically appends C<README.md> and C<LICENSE.txt> to the list.
 
 =item exclude_match
 
