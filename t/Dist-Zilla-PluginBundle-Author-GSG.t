@@ -281,4 +281,39 @@ subtest "Override MetaProvides subclass" => sub {
     );
 };
 
+subtest "Pass through Git::GatherDir params" => sub {
+    my $tzil = Builder->from_config(
+        { dist_root => 'corpus/dist/git-gather_dir' },
+        {   add_files => {
+                'source/dist.ini' => dist_ini(
+                    { name           => 'External-Fake' },
+                    [ '@Author::GSG' => {
+                        include_dotfiles => 1,
+                        exclude_filename => [ qw< foo bar > ],
+                        exclude_match => [ q{baz}, q{qu+x} ],
+                    } ],
+                ),
+            }
+        }
+    );
+
+    my ($plugin)
+        = grep { $_->plugin_name =~ /\bGit::GatherDir\b/ }
+        @{ $tzil->plugins };
+
+    ok $plugin->include_dotfiles, "Enabled include_dotfiles";
+
+    Test::Deep::cmp_bag(
+        $plugin->exclude_filename,
+        [qw< foo bar README.md LICENSE.txt >],
+        "Added to the exclude_filename list"
+    );
+
+    Test::Deep::cmp_bag(
+        $plugin->exclude_match,
+        [q{baz}, q{qu+x}],
+        "Added to the exclude_match list"
+    );
+};
+
 done_testing;
