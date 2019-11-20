@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.0.17
+version v0.0.18
 
 # SYNOPSIS
 
@@ -28,12 +28,12 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     -remove = UploadToCPAN
     -remove = GatherDir
 
-    # The MakeMaker Plugin gets an additional setting
-    # in order to support "version ranges".
+    ; The MakeMaker Plugin gets an additional setting
+    ; in order to support "version ranges".
     eumm_version = 7.1101
 
-    # The defaults for author and license come from
-    #[Author::GSG]
+    ; The defaults for author and license come from
+    [Author::GSG]
 
     [MetaJSON]
     [OurPkgVersion]
@@ -42,8 +42,8 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [$meta_provides] # defaults to MetaProvides::Package
 
     [StaticInstall]
-    # mode    from static_install_mode
-    # dry_run from static_install_dry_run
+    ; mode    from static_install_mode
+    ; dry_run from static_install_dry_run
 
     [Pod::Weaver]
     replacer = replace_with_comment
@@ -64,9 +64,11 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
 
     [Git::Contributors]
     [Git::GatherDir]
-    [PruneFiles]
-    filename = README.md
-    filename = LICENSE.txt
+    ; include_dotfiles
+    ; exclude_filename
+    ; exclude_match
+    exclude_filename = README.md
+    exclude_filename = LICENSE.txt
 
     [GitHub::Meta]
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
@@ -120,6 +122,20 @@ as well as incrementing a more strict `semver`.
 - static\_install\_dry\_run
 
     Passed to [Dist::Zilla::Plugin::StaticInstall](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AStaticInstall) as `dry_run`.
+
+- include\_dotfiles
+
+    Passed to ["include\_dotfiles" in Dist::Zilla::Plugin::Git::GatherDir](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3AGatherDir#include_dotfiles).
+
+- exclude\_filename
+
+    Passed to ["exclude\_filename" in Dist::Zilla::Plugin::Git::GatherDir](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3AGatherDir#exclude_filename).
+
+    Automatically appends `README.md` and `LICENSE.txt` to the list.
+
+- exclude\_match
+
+    Passed to ["exclude\_match" in Dist::Zilla::Plugin::Git::GatherDir](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3AGatherDir#exclude_match).
 
 # Setting up a new dist
 
