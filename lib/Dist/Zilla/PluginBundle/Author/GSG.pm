@@ -76,7 +76,6 @@ sub configure {
         'Git::Tag',
         'Git::Push',
 
-        'Git::Contributors',
         [ 'Git::GatherDir' => $self->config_slice( qw<
             exclude_filename
             exclude_match
@@ -200,7 +199,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Git::Tag]
     [Git::Push]
 
-    [Git::Contributors]
     [Git::GatherDir]
     ; include_dotfiles
     ; exclude_filename
