@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.0.18
+version v0.0.19
 
 # SYNOPSIS
 
@@ -62,7 +62,6 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [Git::Tag]
     [Git::Push]
 
-    [Git::Contributors]
     [Git::GatherDir]
     ; include_dotfiles
     ; exclude_filename
@@ -271,13 +270,8 @@ Grant Street Group <developers@grantstreet.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2019 by Grant Street Group.
+This software is Copyright (c) 2019 - 2020 by Grant Street Group.
 
 This is free software, licensed under:
 
     The Artistic License 2.0 (GPL Compatible)
-
-# CONTRIBUTORS
-
-- Andrew Fresh <andrew.fresh@grantstreet.com>
-- Mark Flickinger <mark.flickinger@grantstreet.com>
