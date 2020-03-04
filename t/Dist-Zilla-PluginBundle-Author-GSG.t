@@ -315,4 +315,21 @@ subtest "Pass through Git::GatherDir params" => sub {
     );
 };
 
+subtest "Set default ExecDir to script" => sub {
+    my $tzil = Builder->from_config(
+        { dist_root => 'corpus/dist/exec_dir' },
+        {   add_files => {
+                'source/dist.ini' => dist_ini(
+                    { name => 'External-Fake' }, ['@Author::GSG'],
+                ),
+            }
+        }
+    );
+
+    my ($plugin)
+        = grep { $_->plugin_name =~ /\bExecDir$/ } @{ $tzil->plugins };
+
+    is $plugin->dir, 'script', "The default ExecDir is 'script'";
+};
+
 done_testing;
