@@ -53,6 +53,9 @@ sub configure {
             static_install_dry_run => 'dry_run',
         } ) ],
 
+        # StaticInstall wants scripts in a script/ ExecDir
+        [ 'ExecDir' => { dir => 'script' } ],
+
         [ 'PodWeaver' => {
             replacer           => 'replace_with_comment',
             post_code_replacer => 'replace_with_nothing',
@@ -95,11 +98,6 @@ sub configure {
 
     push @{ $gather_dir->[2]->{exclude_filename} },
         qw< README.md LICENSE.txt >;
-
-    my ($exec_dir) = grep { $_->[1] eq 'Dist::Zilla::Plugin::ExecDir' }
-        @{ $self->plugins };
-
-    $exec_dir->[2]->{dir} //= 'script';
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -188,7 +186,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     ; dry_run from static_install_dry_run
 
     [ExecDir]
-    dir = script    # for StaticInstall compatibility
+    dir = script    # in addition to bin/ for StaticInstall compatibility
 
     [Pod::Weaver]
     replacer = replace_with_comment

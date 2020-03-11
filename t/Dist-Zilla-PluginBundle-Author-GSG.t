@@ -315,7 +315,7 @@ subtest "Pass through Git::GatherDir params" => sub {
     );
 };
 
-subtest "Set default ExecDir to script" => sub {
+subtest "Add 'script' ExecDir for StaticInstall" => sub {
     my $tzil = Builder->from_config(
         { dist_root => 'corpus/dist/exec_dir' },
         {   add_files => {
@@ -326,10 +326,11 @@ subtest "Set default ExecDir to script" => sub {
         }
     );
 
-    my ($plugin)
-        = grep { $_->plugin_name =~ /\bExecDir$/ } @{ $tzil->plugins };
+    my @dirs = sort map { $_->dir }
+        grep { $_->plugin_name =~ /\bExecDir$/ } @{ $tzil->plugins };
 
-    is $plugin->dir, 'script', "The default ExecDir is 'script'";
+    is_deeply \@dirs, [qw< bin script >],
+        "Have both bin/ and script/ ExecDirs";
 };
 
 done_testing;
