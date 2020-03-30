@@ -53,6 +53,9 @@ sub configure {
             static_install_dry_run => 'dry_run',
         } ) ],
 
+        # StaticInstall wants scripts in a script/ ExecDir
+        [ 'ExecDir' => { dir => 'script' } ],
+
         [ 'PodWeaver' => {
             replacer           => 'replace_with_comment',
             post_code_replacer => 'replace_with_nothing',
@@ -181,6 +184,9 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [StaticInstall]
     ; mode    from static_install_mode
     ; dry_run from static_install_dry_run
+
+    [ExecDir]
+    dir = script    # in addition to bin/ for StaticInstall compatibility
 
     [Pod::Weaver]
     replacer = replace_with_comment
