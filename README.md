@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.0.20
+version v0.0.21
 
 # SYNOPSIS
 
@@ -44,6 +44,9 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [StaticInstall]
     ; mode    from static_install_mode
     ; dry_run from static_install_dry_run
+
+    [ExecDir]
+    dir = script    # in addition to bin/ for StaticInstall compatibility
 
     [Pod::Weaver]
     replacer = replace_with_comment
