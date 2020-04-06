@@ -333,4 +333,51 @@ subtest "Add 'script' ExecDir for StaticInstall" => sub {
         "Have both bin/ and script/ ExecDirs";
 };
 
+
+subtest "Add 'test_compile_*' config slice" => sub {
+    my $tzil = Builder->from_config(
+        { dist_root => 'corpus/dist/test_compile' },
+        {   add_files => {
+                'source/dist.ini' => dist_ini(
+                    { name => 'Test-Compile' },
+                    [   '@Author::GSG' => {
+                            test_compile_filename  => 'compile.t',
+                            test_compile_phase     => 'author',
+                            test_compile_skip      => [ 'Foo$', '^Ba[rz]' ],
+                            test_compile_file      => ['Foo/Bar.PL'],
+                            test_compile_fake_home => 1,
+                            test_compile_needs_display    => 0,
+                            test_compile_fail_on_warning  => 'author',
+                            test_compile_bail_out_on_fail => 1,
+                            test_compile_module_finder    => [':FakeModules'],
+                            test_compile_script_finder    => [':FakeFiles'],
+                            test_compile_xt_mode          => 1,
+                            test_compile_switch           => [ '-X', '-Y' ],
+                        }
+                    ],
+                ),
+            }
+        }
+    );
+
+    my ($plugin)
+        = grep { $_->plugin_name =~ /\bTest::Compile\b/ } @{ $tzil->plugins };
+
+    is_deeply $plugin->{filename} => 'compile.t', "filename is set";
+    is_deeply $plugin->{phase}    => 'author',    "phase is set";
+    is_deeply $plugin->{skips}      => [ 'Foo$', '^Ba[rz]' ], "skip is set";
+    is_deeply $plugin->{files}      => ['Foo/Bar.PL'], "file is set";
+    is_deeply $plugin->{fake_home} => 1, "fake_home is set";
+    is_deeply $plugin->{needs_display}   => 0, "needs_display is set";
+    is_deeply $plugin->{fail_on_warning} => 'author',
+        "fail_on_warning is set";
+    is_deeply $plugin->{bail_out_on_fail} => 1, "bail_out_on_fail is set";
+    is_deeply $plugin->{module_finder}    => [':FakeModules'],
+        "module_finder is set";
+    is_deeply $plugin->{script_finder} => [':FakeFiles'],
+        "script_finder is set";
+    is_deeply $plugin->{xt_mode} => 1, "xt_mode is set";
+    is_deeply $plugin->{switches}  => [ '-X', '-Y' ], "switch is set";
+};
+
 done_testing;
