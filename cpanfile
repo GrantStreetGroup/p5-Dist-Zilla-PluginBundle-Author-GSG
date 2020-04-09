@@ -29,7 +29,7 @@ requires 'Dist::Zilla::Plugin::Git::Commit';
 requires 'Dist::Zilla::Plugin::Git::Tag';
 requires 'Dist::Zilla::Plugin::Git::Push';
 
-requires 'Dist::Zilla::Plugin::ChangelogFromGit';
+requires 'Dist::Zilla::Plugin::ChangelogFromGit::CPAN::Changes';
 
 requires 'Dist::Zilla::Plugin::Git::Contributors';
 requires 'Dist::Zilla::Plugin::PodWeaver';
