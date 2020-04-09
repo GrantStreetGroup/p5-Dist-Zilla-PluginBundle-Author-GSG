@@ -3,6 +3,9 @@ package Dist::Zilla::PluginBundle::Author::GSG;
 # ABSTRACT: Grant Street Group CPAN dists
 # VERSION
 
+use Carp;
+use Git::Wrapper;
+
 use Moose;
 with qw(
     Dist::Zilla::Role::PluginBundle::Easy
@@ -98,6 +101,65 @@ sub configure {
         qw< README.md LICENSE.txt >;
 }
 
+# So we run after subclasses have configured things
+around bundle_config => sub {
+    my ($orig, $class, $section) = @_;
+    my @plugins = $class->$orig($section);
+
+    my @git;
+    my @github;
+
+    foreach my $plugin (@plugins) {
+        if ( $plugin->[1] =~ /GitHub/ ) {
+            push @github, $plugin;
+        }
+        elsif ( $plugin->[1] =~ /Git/ ) {
+            push @git, $plugin;
+        }
+        elsif ( $plugin->[1]->isa('Dist::Zilla::Plugin::GitHub') ) {
+            push @github, $plugin;
+        }
+    }
+
+    # Only configure GitHub if we have GitHub Plugins
+    if (@github) {
+        my $remote = $class->_build_github_remote($section)
+            // croak "Unable to find git remote for GitHub";
+
+        $_->[2]->{push_to} = [$remote] for @git;
+        $_->[2]->{remote}  = $remote   for @github;
+    }
+
+    return @plugins;
+};
+
+sub _build_github_remote {
+    my ($class, $section) = @_;
+
+    my $remote = $section->{payload}->{github_remote};
+    return $remote if $remote;
+
+    my $git = Git::Wrapper->new('./');
+
+    my @remotes = do { local $@; eval { local $SIG{__DIE__};
+        $git->remote('-v')  } };
+
+    for (@remotes) {
+        my ( $name, $url, $direction )
+            = /^ (\P{PosixCntrl}+) \s+ (.*) \s+ \( ([^)]+) \) $/x;
+
+        next unless ( $direction || '' ) eq 'push';
+
+        if ( $url =~ m{(?: :// | \@ ) (?: [\w\-\.]+\. )? github\.com\/ }ix ) {
+            croak "Multiple git remotes found for GitHub" if defined $remote;
+            $remote = $name;
+        }
+    }
+
+    return $remote;
+}
+
+
 __PACKAGE__->meta->make_immutable;
 
 package # hide from the CPAN
@@ -169,6 +231,10 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     ; The MakeMaker Plugin gets an additional setting
     ; in order to support "version ranges".
     eumm_version = 7.1101
+
+    ; We try to guess which remote to use to talk to GitHub
+    ; but you can hardcode a value if necessary
+    github_remote = # detected from git
 
     ; The defaults for author and license come from
     [Author::GSG]
@@ -244,6 +310,16 @@ as well as incrementing a more strict C<semver>.
 =head1 ATTRIBUTES / PARAMETERS
 
 =over
+
+=item github_version
+
+Looks in the C<git remote> list for a remote that matches C<github.com>
+(case insensitively) and if we find one, we use it for the Git and GitHub
+Plugins we use.
+
+If no remotes or multiple remotes are found, throws an exception
+indicating that you need to add the GitHub remote as described in
+L</Cutting a release>.
 
 =item meta_provides
 

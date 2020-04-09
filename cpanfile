@@ -1,5 +1,6 @@
 requires 'perl', 'v5.14.0'; # for kwalitee
 
+requires 'Carp';
 requires 'Moose';
 requires 'version';
 requires 'namespace::autoclean';
@@ -41,6 +42,7 @@ on test => sub {
     requires 'File::pushd';
     requires 'Test::DZil';
     requires 'Test::Deep';
+    requires 'Test::Fatal';
     requires 'Test::More';
     requires 'Test::Pod', '1.14';
     requires 'Test::Strict';
