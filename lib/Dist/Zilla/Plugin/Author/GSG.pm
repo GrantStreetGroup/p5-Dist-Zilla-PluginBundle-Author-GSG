@@ -10,7 +10,10 @@ use namespace::autoclean;
 # ABSTRACT: Grant Street Group defaults CPAN dists
 # VERSION
 
-before 'BUILDARGS' => sub {
+before 'BUILDARGS' => \&_BUILDARGS;
+
+# Use a named sub for Devel::Cover
+sub _BUILDARGS {
     my ($class, $args) = @_;
 
     $args->{zilla}->{authors}
@@ -46,7 +49,7 @@ before 'BUILDARGS' => sub {
 
         $args->{zilla}->{_copyright_year} = $year;
     }
-};
+}
 
 __PACKAGE__->meta->make_immutable;
 1;
