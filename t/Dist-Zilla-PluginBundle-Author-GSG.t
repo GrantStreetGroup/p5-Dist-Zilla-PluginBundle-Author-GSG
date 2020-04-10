@@ -337,16 +337,28 @@ subtest "Override MetaProvides subclass" => sub {
     );
 };
 
+# A package similar to our Internal PluginBundle
 package  # Hide from the CPAN
     Dist::Zilla::PluginBundle::Fake::WithoutGitHub {
     use Moose;
-    extends 'Dist::Zilla::PluginBundle::Author::GSG';
+    with qw( Dist::Zilla::Role::PluginBundle::Easy );
 
-    after configure => sub {
+    sub configure {
         my ($self) = @_;
-        @{ $self->plugins }
-            = grep { $_->[1] !~ /GitHub/ } @{ $self->{plugins} };
-    };
+
+        $self->add_bundle(
+            'Filter' => {
+                %{ $self->payload },
+                -bundle => '@Author::GSG',
+                -remove => [ qw(
+                    GitHub::Meta
+                    Author::GSG::GitHub::UploadRelease
+                ) ]
+            }
+        );
+    }
+
+    __PACKAGE__->meta->make_immutable;
 }
 
 subtest "Set correct GitHub Remote" => sub {
@@ -372,8 +384,52 @@ subtest "Set correct GitHub Remote" => sub {
     ok Builder->from_config(@config),
         "A subclass without any GitHub Plugins doesn't try to find a remote";
 
+    $config[1]{add_files}{'source/dist.ini'} = dist_ini(
+        { name => 'Fake' },
+        [   '@Filter' => {
+                -bundle => '@Author::GSG',
+                -remove => [qw( Author::GSG::GitHub::UploadRelease )],
+            }
+        ],
+    );
+
+    ok Builder->from_config(@config),
+        "A filter doesn't automatically generate the github_remote";
+
+    $config[1]{add_files}{'source/dist.ini'} = dist_ini(
+        { name => 'Fake' },
+        [   '@Filter' => {
+                -bundle => '@Author::GSG',
+                -remove => [qw( Author::GSG::GitHub::UploadRelease )],
+                find_github_remote => 1,
+            },
+        ],
+    );
+
+    like(
+        Test::Fatal::exception { Builder->from_config(@config) },
+        qr/^Unable to find git remote for GitHub /,
+        "A filter that requests it, tries to find the github_remote"
+    );
+
+    $config[1]{add_files}{'source/dist.ini'}
+        = dist_ini( { name => 'Fake' }, ['@Author::GSG',
+            find_github_remote => 0 ], );
+
+    ok Builder->from_config(@config),
+        "You can disable finding the github_remote";
+
     $config[1]{add_files}{'source/dist.ini'}
         = dist_ini( { name => 'Fake' }, ['@Author::GSG'], );
+
+    like(
+        Test::Fatal::exception { Builder->from_config(@config) },
+        qr/^Unable to find git remote for GitHub /,
+        "Without a git remote we fail"
+    );
+
+    $git->remote(
+        add => origin => "https://github.internal.test/Fake.git" );
 
     like(
         Test::Fatal::exception { Builder->from_config(@config) },
