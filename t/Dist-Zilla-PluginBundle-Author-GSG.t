@@ -7,6 +7,7 @@ use Test::DZil;
 use Test::Deep qw();
 
 use Git::Wrapper;
+use File::Spec qw();
 use File::Temp qw();
 use File::pushd qw();
 
@@ -17,6 +18,13 @@ use Dist::Zilla::PluginBundle::Author::GSG;
 
 $ENV{EMAIL} = 'fake@example.com'; # force a default for git
 delete $ENV{V}; # because it could mess up Git::NextVersion
+
+# Avoid letting tests pick up our "root" git directory
+{
+    my @path = File::Spec->splitdir( File::Spec->rel2abs(__FILE__) );
+    splice @path, -2;    # Remote t/$file.t
+    $ENV{GIT_CEILING_DIRECTORIES} = File::Spec->catdir(@path);
+}
 
 {
     my $git = Git::Wrapper->new('.');

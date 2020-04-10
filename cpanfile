@@ -36,6 +36,7 @@ requires 'Dist::Zilla::Plugin::PodWeaver';
 requires 'Pod::Weaver::Section::Contributors';
 
 on test => sub {
+    requires 'File::Spec';
     requires 'File::Temp';
     requires 'File::pushd';
     requires 'Test::DZil';
