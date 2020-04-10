@@ -36,12 +36,14 @@ requires 'Dist::Zilla::Plugin::PodWeaver';
 requires 'Pod::Weaver::Section::Contributors';
 
 on test => sub {
-    requires 'Test::DZil';
-    requires 'Test::Deep';
     requires 'File::Temp';
     requires 'File::pushd';
+    requires 'Test::DZil';
+    requires 'Test::Deep';
+    requires 'Test::More';
     requires 'Test::Pod', '1.14';
     requires 'Test::Strict';
+    requires 'Time::Piece';
 };
 
 on develop => sub {
