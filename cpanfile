@@ -29,19 +29,21 @@ requires 'Dist::Zilla::Plugin::Git::Commit';
 requires 'Dist::Zilla::Plugin::Git::Tag';
 requires 'Dist::Zilla::Plugin::Git::Push';
 
-requires 'Dist::Zilla::Plugin::ChangelogFromGit';
+requires 'Dist::Zilla::Plugin::ChangelogFromGit::CPAN::Changes';
 
 requires 'Dist::Zilla::Plugin::Git::Contributors';
 requires 'Dist::Zilla::Plugin::PodWeaver';
 requires 'Pod::Weaver::Section::Contributors';
 
 on test => sub {
-    requires 'Test::DZil';
-    requires 'Test::Deep';
     requires 'File::Temp';
     requires 'File::pushd';
+    requires 'Test::DZil';
+    requires 'Test::Deep';
+    requires 'Test::More';
     requires 'Test::Pod', '1.14';
     requires 'Test::Strict';
+    requires 'Time::Piece';
 };
 
 on develop => sub {

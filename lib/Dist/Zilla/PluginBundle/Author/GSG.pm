@@ -62,12 +62,10 @@ sub configure {
             config_plugin      => [ '@Default', 'Contributors' ]
         } ],
 
-        [ 'ChangelogFromGit' => {
-            tag_regexp => '\b(v\d+\.\d+\.\d+(?:\.\d+)*)\b',
-            exclude_message => [ q/(?x: ^Merge \s+ (?:
-                pull \s+ request
-              | (?:remote-tracking\s+)? branch # gitc
-            ) \b )/ ],
+        [ 'ChangelogFromGit::CPAN::Changes' => {
+            file_name    => 'CHANGES',
+            tag_regexp   => '\b(v\d+\.\d+\.\d+(?:\.\d+)*)\b',
+            copy_to_root => 0,
         } ],
 
         [ 'Git::NextVersion' => {

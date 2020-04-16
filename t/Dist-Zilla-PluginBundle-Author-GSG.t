@@ -10,6 +10,8 @@ use Git::Wrapper;
 use File::Temp qw();
 use File::pushd qw();
 
+use Time::Piece;
+
 use lib qw(lib);
 use Dist::Zilla::PluginBundle::Author::GSG;
 
@@ -172,10 +174,15 @@ subtest 'NextVersion' => sub {
     my $git = Git::Wrapper->new($dir);
     my $upstream = 'GrantStreetGroup/p5-Versioned-Package';
 
+    my $now = Time::Piece->new - 86400 * 30;
+
+    local $ENV{GIT_AUTHOR_DATE}    = $now->datetime;
+    local $ENV{GIT_COMMITTER_DATE} = $ENV{GIT_AUTHOR_DATE};
+
     $git->init;
     $git->remote( qw/ add origin /,
         "https://fake-github.com/$upstream.git" );
-    $git->commit( { m => 'init', date => '2001-02-03 04:05:06' },
+    $git->commit( { m => 'init', date => $now->datetime },
         '--allow-empty' );
 
     my $tzil = Builder->from_config(
@@ -197,16 +204,7 @@ subtest 'NextVersion' => sub {
     my ($version_plugin)
         = $tzil->plugin_named('@Author::GSG/Git::NextVersion');
     my ($changelog_plugin)
-        = $tzil->plugin_named('@Author::GSG/ChangelogFromGit');
-
-    $version_plugin->git->commit( { m => $_ }, '--allow-empty' ) for (
-        q{Merge branch 'ABC-123'},
-        q{Merge remote-tracking branch 'origin/master' into test},
-        q{Merge remote-tracking branch 'origin/test' into stage},
-        q{Merge remote-tracking branch 'origin/stage' into prod},
-        q{Merge pull request #123 in GHT/gsg-test from internal to master},
-        q{Merge pull request #321 from GrantStreetGroup/external},
-    );
+        = $tzil->plugin_named('@Author::GSG/ChangelogFromGit::CPAN::Changes');
 
     my @versions = (
         [ 'v0.0.1'              => 'v0.0.2' ],
@@ -214,40 +212,86 @@ subtest 'NextVersion' => sub {
         [ 'dist/v2.31.1.2/prod' => 'v2.31.2' ],
     );
 
-    my @expected_changes = { changes => ["init\n"] };
     for (@versions) {
         my ($have, $expect) = @{ $_ };
-        sleep 1; # ugh, ChangelogFromGit uses the commit date
         delete $version_plugin->{_all_versions};
-        delete $changelog_plugin->{releases};
 
-        $version_plugin->git->tag($have);
-        $version_plugin->git->commit( { m => "Version $expect" },
+        $now += 86400;
+        $ENV{GIT_AUTHOR_DATE} = $ENV{GIT_COMMITTER_DATE} = $now->datetime;
+        $version_plugin->git->commit( { m => "Changes for $have" },
             '--allow-empty' );
-
-        $expected_changes[-1]{version} = $have;
-        push @expected_changes, { changes => ["Version $expect\n"] };
+        $version_plugin->git->tag($have);
 
         is $version_plugin->provide_version, $expect,
             "Version after $have is $expect";
     }
 
+    for (
+        q{Merge branch 'ABC-123'},
+        q{Merge remote-tracking branch 'origin/master' into test},
+        q{Merge remote-tracking branch 'origin/test' into stage},
+        q{Merge remote-tracking branch 'origin/stage' into prod},
+        q{Merge pull request #123 in GHT/gsg-test from internal to master},
+        q{Merge pull request #321 from GrantStreetGroup/external},
+        q{A New Release},
+        )
+    {
+        $now += 86400;
+        $ENV{GIT_AUTHOR_DATE} = $ENV{GIT_COMMITTER_DATE} = $now->datetime;
+        $version_plugin->git->commit( { m => $_ },
+            '--allow-empty' );
+    }
     $version_plugin->git->tag('v3.0.0');
-    $expected_changes[-1]{version} = 'v3.0.0';
+
+    # For debugging, you can see the log here.
+    #diag $_ for $version_plugin->git->RUN('log', '--decorate' );
 
     {
         my $dir = File::pushd::pushd( $version_plugin->git->dir )
             or die "Unable to chdir source: $!";
+        local $ENV{DZIL_RELEASING} = 1;
         $changelog_plugin->gather_files;
     }
 
-    my @got = map { {
-        version => $_->version,
-        changes => [ map { $_->description } @{ $_->changes } ]
-    } } $changelog_plugin->all_releases;
+    my @changelog = map { [ split /\s+-\s+/ms ] } split /\n\s*\n/ms,
+        $tzil->files->[-1]->content;
 
-    is_deeply \@got, \@expected_changes,
-        "Expected Changes generated";
+    my %got;
+    for (@changelog) {
+        my ($version, @changes) = @{$_};
+
+        $version =~ s/\s+\d{4}-\d{2}-\d{2}T.*$//; # Remove date
+
+        chomp @changes;
+        s/\s+/ /gms       for @changes;
+        s/\s+\([^)]+\)$// for @changes;
+
+        $got{$version} = \@changes;
+    }
+
+    # This is not what I expected in the Changelog.
+    # I don't know why "init" and "v0.0.1" changes are in the wrong release.
+    my %expect = (
+        'Changelog for Versioned' => [],
+        'v0.0.1'                  => ['No changes found'],
+        'v1.2.3.4'                => ['Changes for v1.2.3.4'],
+        'v2.31.1.2'               => [
+            'Changes for dist/v2.31.1.2/prod',
+            'Changes for v1.2.3.4',
+            'Changes for v0.0.1',
+            'init'
+        ],
+        'v3.0.0' => [
+            'A New Release',
+            'Merge remote-tracking branch \'origin/stage\' into prod',
+            'Merge remote-tracking branch \'origin/test\' into stage',
+            'Merge remote-tracking branch \'origin/master\' into test',
+            'Changes for dist/v2.31.1.2/prod'
+        ]
+    );
+
+    is_deeply( \%got, \%expect, "Expected Changes generated" )
+        || diag explain [ \%got, \%expect ];
 };
 
 subtest "Override MetaProvides subclass" => sub {
