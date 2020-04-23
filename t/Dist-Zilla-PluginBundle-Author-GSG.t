@@ -5,8 +5,10 @@ use Test::More;
 
 use Test::DZil;
 use Test::Deep qw();
+use Test::Fatal qw();
 
 use Git::Wrapper;
+use File::Spec qw();
 use File::Temp qw();
 use File::pushd qw();
 
@@ -17,6 +19,13 @@ use Dist::Zilla::PluginBundle::Author::GSG;
 
 $ENV{EMAIL} = 'fake@example.com'; # force a default for git
 delete $ENV{V}; # because it could mess up Git::NextVersion
+
+# Avoid letting tests pick up our "root" git directory
+{
+    my @path = File::Spec->splitdir( File::Spec->rel2abs(__FILE__) );
+    splice @path, -2;    # Remote t/$file.t
+    $ENV{GIT_CEILING_DIRECTORIES} = File::Spec->catdir(@path);
+}
 
 {
     my $git = Git::Wrapper->new('.');
@@ -41,7 +50,7 @@ subtest 'Build a basic dist' => sub {
 
     $git->init;
     $git->remote( qw/ add origin /,
-        "https://fake-github.com/$upstream.git" );
+        "https://fake.github.com/$upstream.git" );
     $git->commit( { m => 'init', date => '2001-02-03 04:05:06' },
         '--allow-empty' );
 
@@ -181,7 +190,7 @@ subtest 'NextVersion' => sub {
 
     $git->init;
     $git->remote( qw/ add origin /,
-        "https://fake-github.com/$upstream.git" );
+        "https://fake.github.com/$upstream.git" );
     $git->commit( { m => 'init', date => $now->datetime },
         '--allow-empty' );
 
@@ -305,8 +314,12 @@ subtest "Override MetaProvides subclass" => sub {
         { dist_root => 'corpus/dist/metaprovides_subclass' },
         {   add_files => {
                 'source/dist.ini' => dist_ini(
-                    { name           => 'External-Fake' },
-                    [ '@Author::GSG' => { meta_provides => 'Fake' } ],
+                    { name => 'External-Fake' },
+                    [   '@Author::GSG' => {
+                            meta_provides => 'Fake',
+                            github_remote => 'fake'
+                        }
+                    ],
                 ),
                 'source/lib/External/Fake.pm' =>
                     "package External::Fake;\n# ABSTRACT: ABSTRACT\n1;",
@@ -324,6 +337,166 @@ subtest "Override MetaProvides subclass" => sub {
     );
 };
 
+# A package similar to our Internal PluginBundle
+package  # Hide from the CPAN
+    Dist::Zilla::PluginBundle::Fake::WithoutGitHub {
+    use Moose;
+    with qw( Dist::Zilla::Role::PluginBundle::Easy );
+
+    sub configure {
+        my ($self) = @_;
+
+        $self->add_bundle(
+            'Filter' => {
+                %{ $self->payload },
+                -bundle => '@Author::GSG',
+                -remove => [ qw(
+                    GitHub::Meta
+                    Author::GSG::GitHub::UploadRelease
+                ) ]
+            }
+        );
+    }
+
+    __PACKAGE__->meta->make_immutable;
+}
+
+subtest "Set correct GitHub Remote" => sub {
+    my $dir = File::Temp->newdir("dzpbag-XXXXXXXXX");
+
+    #local $Git::Wrapper::DEBUG = 1;
+    my $git = Git::Wrapper->new($dir);
+    $git->init;
+    $git->commit( { m => 'init' }, '--allow-empty' );
+
+    my @config = (
+        { dist_root => 'corpus/dist/github' },
+        {   also_copy => { $dir => 'source' },
+            add_files => {
+                'source/dist.ini' =>
+                    dist_ini( { name => 'Fake' }, ['@Fake::WithoutGitHub'] ),
+                'source/lib/Fake.pm' =>
+                    "package Fake;\n# ABSTRACT: ABSTRACT\n1;",
+            }
+        }
+    );
+
+    ok Builder->from_config(@config),
+        "A subclass without any GitHub Plugins doesn't try to find a remote";
+
+    $config[1]{add_files}{'source/dist.ini'} = dist_ini(
+        { name => 'Fake' },
+        [   '@Filter' => {
+                -bundle => '@Author::GSG',
+                -remove => [qw( Author::GSG::GitHub::UploadRelease )],
+            }
+        ],
+    );
+
+    ok Builder->from_config(@config),
+        "A filter doesn't automatically generate the github_remote";
+
+    $config[1]{add_files}{'source/dist.ini'} = dist_ini(
+        { name => 'Fake' },
+        [   '@Filter' => {
+                -bundle => '@Author::GSG',
+                -remove => [qw( Author::GSG::GitHub::UploadRelease )],
+                find_github_remote => 1,
+            },
+        ],
+    );
+
+    like(
+        Test::Fatal::exception { Builder->from_config(@config) },
+        qr/^Unable to find git remote for GitHub /,
+        "A filter that requests it, tries to find the github_remote"
+    );
+
+    $config[1]{add_files}{'source/dist.ini'}
+        = dist_ini( { name => 'Fake' }, ['@Author::GSG',
+            find_github_remote => 0 ], );
+
+    ok Builder->from_config(@config),
+        "You can disable finding the github_remote";
+
+    $config[1]{add_files}{'source/dist.ini'}
+        = dist_ini( { name => 'Fake' }, ['@Author::GSG'], );
+
+    like(
+        Test::Fatal::exception { Builder->from_config(@config) },
+        qr/^Unable to find git remote for GitHub /,
+        "Without a git remote we fail"
+    );
+
+    $git->remote(
+        add => origin => "https://github.internal.test/Fake.git" );
+
+    like(
+        Test::Fatal::exception { Builder->from_config(@config) },
+        qr/^Unable to find git remote for GitHub /,
+        "Without a git remote we fail"
+    );
+
+    $git->remote(
+        add => 0 => "https://fake.GitHub.com/GrantStreetGroup/Fake.git" );
+
+    {
+        ok my $tzil = Builder->from_config(@config),
+            "With a single (falsy) remote we don't get an exception";
+
+        my %set;
+        foreach my $plugin ( @{ $tzil->plugins } ) {
+            if ( $plugin->isa('Dist::Zilla::Plugin::Git::Push') ) {
+                $set{git}++;
+                Test::Deep::cmp_bag( $plugin->push_to, [0],
+                    "Set push_to on " . $plugin->plugin_name );
+            }
+            elsif ( $plugin->isa('Dist::Zilla::Plugin::GitHub') ) {
+                $set{github}++;
+                is $plugin->remote, 0,
+                    "Set remote on " . $plugin->plugin_name;
+            }
+        }
+
+        is $set{git},    1, "Set one Git Plugin";
+        is $set{github}, 2, "Set two GitHub Plugins";
+    }
+
+    $git->remote(
+        add => 1 => "https://fake.GitHub.com/GrantStreetGroup/Fake.git" );
+
+    like(
+        Test::Fatal::exception { Builder->from_config(@config) },
+        qr/^Multiple git remotes found for GitHub /,
+        "Without a git remote we fail"
+    );
+
+    $config[1]{add_files}{'source/dist.ini'} = dist_ini( { name => 'Fake' },
+        [ '@Author::GSG' => { github_remote => 'fake' } ] );
+
+    {
+        ok my $tzil = Builder->from_config(@config),
+            "With an overridden github_remote we don't get an exception";
+
+        my %set;
+        foreach my $plugin ( @{ $tzil->plugins } ) {
+            if ( $plugin->isa('Dist::Zilla::Plugin::Git::Push') ) {
+                $set{git}++;
+                Test::Deep::cmp_bag( $plugin->push_to, ['fake'],
+                    "Set 'fake' push_to on " . $plugin->plugin_name );
+            }
+            elsif ( $plugin->isa('Dist::Zilla::Plugin::GitHub') ) {
+                $set{github}++;
+                is $plugin->remote, 'fake',
+                    "Set 'fake' remote on " . $plugin->plugin_name;
+            }
+        }
+
+        is $set{git},    1, "Set one Git::Push Plugin";
+        is $set{github}, 2, "Set two Git::Push Plugin";
+    }
+};
+
 subtest "Pass through Git::GatherDir params" => sub {
     my $tzil = Builder->from_config(
         { dist_root => 'corpus/dist/git-gather_dir' },
@@ -331,6 +504,7 @@ subtest "Pass through Git::GatherDir params" => sub {
                 'source/dist.ini' => dist_ini(
                     { name           => 'External-Fake' },
                     [ '@Author::GSG' => {
+                        github_remote    => 'fake',
                         include_dotfiles => 1,
                         exclude_filename => [ qw< foo bar > ],
                         exclude_match => [ q{baz}, q{qu+x} ],
@@ -364,7 +538,8 @@ subtest "Add 'script' ExecDir for StaticInstall" => sub {
         { dist_root => 'corpus/dist/exec_dir' },
         {   add_files => {
                 'source/dist.ini' => dist_ini(
-                    { name => 'External-Fake' }, ['@Author::GSG'],
+                    { name => 'External-Fake' },
+                    [ '@Author::GSG' => { github_remote => 'fake' } ],
                 ),
             }
         }

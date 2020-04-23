@@ -3,6 +3,9 @@ package Dist::Zilla::PluginBundle::Author::GSG;
 # ABSTRACT: Grant Street Group CPAN dists
 # VERSION
 
+use Carp;
+use Git::Wrapper;
+
 use Moose;
 with qw(
     Dist::Zilla::Role::PluginBundle::Easy
@@ -96,7 +99,72 @@ sub configure {
 
     push @{ $gather_dir->[2]->{exclude_filename} },
         qw< README.md LICENSE.txt >;
+
+    # By default we want to set the github remote,
+    # but "subclasses" may not want that, so make them
+    # calculate the github_remote themselves.
+    $self->payload->{find_github_remote} //=
+        $self->name eq '@Author::GSG';
+
+    # Look for the GitHub remote, or fail, if we are supposed to.
+    if ( $self->payload->{find_github_remote} ) {
+        $self->payload->{github_remote} //= $self->_find_github_remote
+            // croak "Unable to find git remote for GitHub";
+    }
+
+    $self->_set_github_remote( $self->payload->{github_remote} )
+        if defined $self->payload->{github_remote}
+        and length $self->payload->{github_remote};
 }
+
+
+sub _set_github_remote {
+    my ( $self, $remote ) = @_;
+
+    my @git;
+    my @github;
+
+    foreach my $plugin ( @{ $self->plugins } ) {
+        if ( $plugin->[1] =~ /GitHub/ ) {
+            push @github, $plugin;
+        }
+        elsif ( $plugin->[1] =~ /Git/ ) {
+            push @git, $plugin;
+        }
+    }
+
+    # All our git/github plugins configure this way, so good enough?
+    $_->[2]->{push_to} = [$remote] for @git;
+    $_->[2]->{remote}  = $remote   for @github;
+
+    return $remote;
+}
+
+sub _find_github_remote {
+    my ($self) = @_;
+
+    # If it's a git issue finding the remote,
+    # the user can figure it out.
+    my @remotes = do { local $@; eval { local $SIG{__DIE__};
+        Git::Wrapper->new('.')->remote('-v') } };
+
+    my $remote;
+
+    for (@remotes) {
+        my ( $name, $url, $direction )
+            = /^ (\P{PosixCntrl}+) \s+ (.*) \s+ \( ([^)]+) \) $/x;
+
+        next unless ( $direction || '' ) eq 'push';
+
+        if ( $url =~ m{(?: :// | \@ ) (?: [\w\-\.]+\. )? github\.com\/ }ix ) {
+            croak "Multiple git remotes found for GitHub" if defined $remote;
+            $remote = $name;
+        }
+    }
+
+    return $remote;
+}
+
 
 __PACKAGE__->meta->make_immutable;
 
@@ -169,6 +237,14 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     ; The MakeMaker Plugin gets an additional setting
     ; in order to support "version ranges".
     eumm_version = 7.1101
+
+    ; We try to guess which remote to use to talk to GitHub
+    ; but you can hardcode a value if necessary
+    github_remote = # detected from git if find_github_remote is set
+
+    ; Enabled by default if the PluginBundle name is Author::GSG
+    ; This means Filters do not automatically get it set
+    find_github_remote = 1
 
     ; The defaults for author and license come from
     [Author::GSG]
@@ -244,6 +320,24 @@ as well as incrementing a more strict C<semver>.
 =head1 ATTRIBUTES / PARAMETERS
 
 =over
+
+=item github_remote / find_github_remote
+
+Looks in the C<git remote> list for a C<push> remote that matches
+C<github.com> (case insensitively) and if we find one,
+we pass it to the Git and GitHub Plugins we use.
+
+If no remotes or multiple remotes are found, throws an exception
+indicating that you need to add the GitHub remote as described in
+L</Cutting a release>.
+
+Trying to find a remote, and failing if it isn't found,
+is only enabled if you set C<find_github_remote> to a truthy value.
+However, C<find_github_remote> defaults to truthy if the section
+name for the PluginBundle is the default, C<@Author::GSG>.
+
+You can disable this, and fall back to each Plugin's default,
+by setting C<github_remote> to an empty string.
 
 =item meta_provides
 
