@@ -560,6 +560,7 @@ subtest "Add 'test_compile_*' config slice" => sub {
                 'source/dist.ini' => dist_ini(
                     { name => 'Test-Compile' },
                     [   '@Author::GSG' => {
+                            github_remote    => 'fake',
                             test_compile_filename  => 'compile.t',
                             test_compile_phase     => 'author',
                             test_compile_skip      => [ 'Foo$', '^Ba[rz]' ],
