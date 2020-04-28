@@ -32,6 +32,14 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     ; in order to support "version ranges".
     eumm_version = 7.1101
 
+    ; We try to guess which remote to use to talk to GitHub
+    ; but you can hardcode a value if necessary
+    github_remote = # detected from git if find_github_remote is set
+
+    ; Enabled by default if the PluginBundle name is Author::GSG
+    ; This means Filters do not automatically get it set
+    find_github_remote = 1
+
     ; The defaults for author and license come from
     [Author::GSG]
 
@@ -117,6 +125,24 @@ should be open enough to pick up the older style tags we used
 as well as incrementing a more strict `semver`.
 
 # ATTRIBUTES / PARAMETERS
+
+- github\_remote / find\_github\_remote
+
+    Looks in the `git remote` list for a `push` remote that matches
+    `github.com` (case insensitively) and if we find one,
+    we pass it to the Git and GitHub Plugins we use.
+
+    If no remotes or multiple remotes are found, throws an exception
+    indicating that you need to add the GitHub remote as described in
+    ["Cutting a release"](#cutting-a-release).
+
+    Trying to find a remote, and failing if it isn't found,
+    is only enabled if you set `find_github_remote` to a truthy value.
+    However, `find_github_remote` defaults to truthy if the section
+    name for the PluginBundle is the default, `@Author::GSG`.
+
+    You can disable this, and fall back to each Plugin's default,
+    by setting `github_remote` to an empty string.
 
 - meta\_provides
 
