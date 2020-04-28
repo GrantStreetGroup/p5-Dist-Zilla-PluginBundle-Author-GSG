@@ -15,6 +15,11 @@ use namespace::autoclean;
 sub mvp_multivalue_args { qw(
     exclude_filename
     exclude_match
+    test_compile_skip
+    test_compile_file
+    test_compile_module_finder
+    test_compile_script_finder
+    test_compile_switch
 ) }
 
 sub configure {
@@ -89,7 +94,23 @@ sub configure {
         'GitHub::Meta',
         'Author::GSG::GitHub::UploadRelease',
 
-        'Test::Compile',
+        [ 'Test::Compile' => $self->config_slice( {
+            map {; "test_compile_$_" => $_ } qw<
+                filename
+                phase
+                skip
+                file
+                fake_home
+                needs_display
+                fail_on_warning
+                bail_out_on_fail
+                module_finder
+                script_finder
+                xt_mode
+                switch
+            >
+        } ) ],
+
         'Test::ReportPrereqs',
     );
 
@@ -290,6 +311,19 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
 
     [Test::Compile]
+    ; test_compile_filename
+    ; test_compile_phase
+    ; test_compile_skip
+    ; test_compile_file
+    ; test_compile_fake_home
+    ; test_compile_needs_display
+    ; test_compile_fail_on_warning
+    ; test_compile_bail_out_on_fail
+    ; test_compile_module_finder
+    ; test_compile_script_finder
+    ; test_compile_xt_mode
+    ; test_compile_switch
+
     [Test::ReportPrereqs]
 
 =head1 DESCRIPTION
@@ -372,6 +406,15 @@ Automatically appends C<README.md> and C<LICENSE.txt> to the list.
 =item exclude_match
 
 Passed to L<Dist::Zilla::Plugin::Git::GatherDir/exclude_match>.
+
+=item test_compile_*
+
+    [@Author::GSG]
+    test_compile_skip    = ^My::NonCompiling::Module$
+    test_compile_xt_mode = 1
+
+All options for L<Dist::Zilla::Plugin::Test::Compile> should be supported
+with the C<test_compile_> prefix.
 
 =back
 

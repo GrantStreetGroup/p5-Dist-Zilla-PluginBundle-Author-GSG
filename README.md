@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.0.21
+version v0.1.1
 
 # SYNOPSIS
 
@@ -76,6 +76,19 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [GitHub::UploadRelease] # plus magic to work without releasing elsewhere
 
     [Test::Compile]
+    ; test_compile_filename
+    ; test_compile_phase
+    ; test_compile_skip
+    ; test_compile_file
+    ; test_compile_fake_home
+    ; test_compile_needs_display
+    ; test_compile_fail_on_warning
+    ; test_compile_bail_out_on_fail
+    ; test_compile_module_finder
+    ; test_compile_script_finder
+    ; test_compile_xt_mode
+    ; test_compile_switch
+
     [Test::ReportPrereqs]
 
 # DESCRIPTION
@@ -138,6 +151,15 @@ as well as incrementing a more strict `semver`.
 - exclude\_match
 
     Passed to ["exclude\_match" in Dist::Zilla::Plugin::Git::GatherDir](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3AGatherDir#exclude_match).
+
+- test\_compile\_\*
+
+        [@Author::GSG]
+        test_compile_skip    = ^My::NonCompiling::Module$
+        test_compile_xt_mode = 1
+
+    All options for [Dist::Zilla::Plugin::Test::Compile](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3ATest%3A%3ACompile) should be supported
+    with the `test_compile_` prefix.
 
 # Setting up a new dist
 
