@@ -526,7 +526,7 @@ dependency chain.
 
 =head2 Cutting a release
 
-    carton exec dzil release
+    carton exec -- dzil release
 
 This should calculate the new version number, build a new release tarball,
 add a release tag, create the release on GitHub and upload the tarball to it.
@@ -534,9 +534,15 @@ add a release tag, create the release on GitHub and upload the tarball to it.
 You can set the C<V> environment variable to force a specific version,
 as described by L<Dist::Zilla::Plugin::Git::NextVersion>.
 
-    V=2.0.0 carton exec dzil release
+    V=2.0.0 carton exec -- dzil release
 
 =over
+
+=item Make sure your local checkout has what you want to release
+
+Completing a C<< dzil release >> will commit any changes,
+tag the release version to the currently checked out commit,
+and push to the remote.
 
 =item Your git remote must be a format GitHub::UploadRelease understands
 
