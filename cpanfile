@@ -6,6 +6,7 @@ requires 'version';
 requires 'namespace::autoclean';
 
 requires 'Dist::Zilla';
+requires 'Dist::Zilla::Role::Plugin';
 requires 'Dist::Zilla::Role::PluginBundle::Easy';
 
 requires 'Git::Wrapper';
@@ -37,6 +38,7 @@ requires 'Dist::Zilla::Plugin::PodWeaver';
 requires 'Pod::Weaver::Section::Contributors';
 
 on test => sub {
+    requires 'Dist::Zilla::Role::MetaProvider';
     requires 'File::Spec';
     requires 'File::Temp';
     requires 'File::pushd';
