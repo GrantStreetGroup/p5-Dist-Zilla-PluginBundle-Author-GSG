@@ -553,10 +553,9 @@ C<https://github.com/GrantsStreetGroup/$repo.git>.
 
 As shown in the "Fetch URL" from C<git remote -n $remote>,
 
-=item Set C<github.user> and either C<github.password> or C<github.token>
+=item Set C<github.user> and C<github.token>
 
-You should probably use a token instead of your password,
-which you can get by following
+You can get a GitHub token by following
 L<GitHub's instructions|https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line>.
 
     git config --global github.user  github_login_name
