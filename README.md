@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.1.1
+version v0.1.2
 
 # SYNOPSIS
 
@@ -287,7 +287,7 @@ Some of the targets that are included in the Makefile are:
 
 ## Cutting a release
 
-    carton exec dzil release
+    carton exec -- dzil release
 
 This should calculate the new version number, build a new release tarball,
 add a release tag, create the release on GitHub and upload the tarball to it.
@@ -295,7 +295,13 @@ add a release tag, create the release on GitHub and upload the tarball to it.
 You can set the `V` environment variable to force a specific version,
 as described by [Dist::Zilla::Plugin::Git::NextVersion](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AGit%3A%3ANextVersion).
 
-    V=2.0.0 carton exec dzil release
+    V=2.0.0 carton exec -- dzil release
+
+- Make sure your local checkout has what you want to release
+
+    Completing a `dzil release` will commit any changes,
+    tag the release version to the currently checked out commit,
+    and push to the remote.
 
 - Your git remote must be a format GitHub::UploadRelease understands
 
@@ -306,10 +312,9 @@ as described by [Dist::Zilla::Plugin::Git::NextVersion](https://metacpan.org/pod
 
     As shown in the "Fetch URL" from `git remote -n $remote`,
 
-- Set `github.user` and either `github.password` or `github.token`
+- Set `github.user` and `github.token`
 
-    You should probably use a token instead of your password,
-    which you can get by following
+    You can get a GitHub token by following
     [GitHub's instructions](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line).
 
         git config --global github.user  github_login_name
