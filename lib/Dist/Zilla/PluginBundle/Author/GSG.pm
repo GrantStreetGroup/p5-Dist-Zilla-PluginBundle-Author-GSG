@@ -177,7 +177,9 @@ sub _find_github_remote {
 
         next unless ( $direction || '' ) eq 'push';
 
-        if ( $url =~ m{(?: :// | \@ ) (?: [\w\-\.]+\. )? github\.com\/ }ix ) {
+        if ( $url
+            =~ m{(?: :// | \@ ) (?: [\w\-\.]+\. )? github\.com [/:] }ix )
+        {
             croak "Multiple git remotes found for GitHub" if defined $remote;
             $remote = $name;
         }
@@ -547,7 +549,8 @@ and push to the remote.
 =item Your git remote must be a format GitHub::UploadRelease understands
 
 Either
-C<ssh://git@github.com/GrantsStreetGroup/$repo.git>
+C<git@github.com:GrantsStreetGroup/$repo.git>,
+C<ssh://git@github.com/GrantsStreetGroup/$repo.git>,
 or
 C<https://github.com/GrantsStreetGroup/$repo.git>.
 

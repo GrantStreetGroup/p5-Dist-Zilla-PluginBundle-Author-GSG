@@ -438,7 +438,7 @@ subtest "Set correct GitHub Remote" => sub {
     );
 
     $git->remote(
-        add => 0 => "https://fake.GitHub.com/GrantStreetGroup/Fake.git" );
+        add => 0 => "git\@fake.github.com:GrantStreetGroup/Fake.git" );
 
     {
         ok my $tzil = Builder->from_config(@config),
