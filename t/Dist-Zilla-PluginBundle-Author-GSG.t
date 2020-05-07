@@ -217,6 +217,8 @@ subtest 'NextVersion' => sub {
 
     my @versions = (
         [ 'v0.0.1'              => 'v0.0.2' ],
+        # XXX: NextVersion won't work but ChangelogFromGit::CPAN::Changes will
+        [ '0.90'                => 'v0.0.2' ],
         [ 'v1.2.3.4'            => 'v1.2.4' ],
         [ 'dist/v2.31.1.2/prod' => 'v2.31.2' ],
     );
@@ -283,12 +285,18 @@ subtest 'NextVersion' => sub {
     my %expect = (
         'Changelog for Versioned' => [],
         'v0.0.1'                  => ['No changes found'],
-        'v1.2.3.4'                => ['Changes for v1.2.3.4'],
+        '0.90'                    => [
+            'Changes for 0.90',
+            'Changes for v0.0.1',
+            'init',
+        ],
+        'v1.2.3.4'                => [
+            'Changes for v1.2.3.4',
+            'Changes for 0.90',
+        ],
         'v2.31.1.2'               => [
             'Changes for dist/v2.31.1.2/prod',
             'Changes for v1.2.3.4',
-            'Changes for v0.0.1',
-            'init'
         ],
         'v3.0.0' => [
             'A New Release',

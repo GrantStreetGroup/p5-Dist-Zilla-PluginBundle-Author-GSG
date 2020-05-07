@@ -72,7 +72,8 @@ sub configure {
 
         [ 'ChangelogFromGit::CPAN::Changes' => {
             file_name    => 'CHANGES',
-            tag_regexp   => '\b(v\d+\.\d+\.\d+(?:\.\d+)*)\b',
+            # Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
+            tag_regexp   => '\b(v?\d+\.\d+(?:\.\d+)*)\b',
             copy_to_root => 0,
         } ],
 
