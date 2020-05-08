@@ -83,7 +83,10 @@ sub configure {
         } ],
 
         'Git::Commit',
-        'Git::Tag',
+        [ 'Git::Tag' => {
+            tag_format  => '%V',
+            tag_message => '%V',
+        } ],
         'Git::Push',
 
         [ 'Git::GatherDir' => $self->config_slice( qw<
@@ -301,6 +304,9 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [Git::Commit]
     [Git::Tag]
+    tag_format  = %V
+    tag_message = %V
+
     [Git::Push]
 
     [Git::GatherDir]
