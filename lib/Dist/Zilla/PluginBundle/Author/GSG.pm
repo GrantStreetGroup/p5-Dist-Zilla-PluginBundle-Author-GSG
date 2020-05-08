@@ -77,7 +77,7 @@ sub configure {
             copy_to_root => 0,
         } ],
 
-        [ 'Git::NextVersion' => {
+        [ 'GSG::Git::NextVersion' => {
             first_version  => 'v0.0.1',
             version_regexp => '\b(v\d+\.\d+\.\d+)\b',
         } ],
@@ -232,6 +232,25 @@ sub _get_credentials {
 }
 
 __PACKAGE__->meta->make_immutable;
+
+package # hide from the CPAN
+    Dist::Zilla::Plugin::GSG::Git::NextVersion;
+use Moose;
+BEGIN { extends 'Dist::Zilla::Plugin::Git::NextVersion' }
+
+before 'provide_version' => sub {
+    if ( my $v = $ENV{V} ) {
+        $v =~ s/^v//;
+        my @v = split /\./, $v;
+
+        Carp::croak "Invalid version '$ENV{V}' in \$ENV{V}"
+            if @v > 3 or grep /\D/, @v;
+
+        $ENV{V} = sprintf "v%d.%d.%d", @v, 0, 0, 0;
+    }
+};
+
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -297,7 +316,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     tag_regexp   = \b(v?\d+\.\d+(?:\.\d+)*)\b
     copy_to_root = 0
 
-    [Git::NextVersion]
+    [Git::NextVersion] # plus magic to sanitize versions from the environment
     first_version  = v0.0.1
     version_regexp = \b(v\d+\.\d+\.\d+)(?:\.\d+)*\b
 
