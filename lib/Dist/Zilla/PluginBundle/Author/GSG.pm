@@ -294,9 +294,11 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
-    [ChangelogFromGit]
-    tag_regexp = \b(v\d+\.\d+\.\d+(?:\.\d+)*)\b
-    exclude_message = (?x: ^Merge \s+ (?: pull \s+ request | (?:remote-tracking\s+)? branch ) \b )
+    [ChangelogFromGit::CPAN::Changes]
+    file_name    = CHANGES
+    ; Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
+    tag_regexp   = \b(v?\d+\.\d+(?:\.\d+)*)\b
+    copy_to_root = 0
 
     [Git::NextVersion]
     first_version  = v0.0.1
