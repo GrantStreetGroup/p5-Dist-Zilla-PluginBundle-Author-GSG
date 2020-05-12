@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.1.2
+version v0.1.3
 
 # SYNOPSIS
 
@@ -61,11 +61,13 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
-    [ChangelogFromGit]
-    tag_regexp = \b(v\d+\.\d+\.\d+(?:\.\d+)*)\b
-    exclude_message = (?x: ^Merge \s+ (?: pull \s+ request | (?:remote-tracking\s+)? branch ) \b )
+    [ChangelogFromGit::CPAN::Changes]
+    file_name    = CHANGES
+    ; Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
+    tag_regexp   = \b(v?\d+\.\d+(?:\.\d+)*)\b
+    copy_to_root = 0
 
-    [Git::NextVersion]
+    [Git::NextVersion] # plus magic to sanitize versions from the environment
     first_version  = v0.0.1
     version_regexp = \b(v\d+\.\d+\.\d+)(?:\.\d+)*\b
 
@@ -306,7 +308,8 @@ as described by [Dist::Zilla::Plugin::Git::NextVersion](https://metacpan.org/pod
 - Your git remote must be a format GitHub::UploadRelease understands
 
     Either
-    `ssh://git@github.com/GrantsStreetGroup/$repo.git`
+    `git@github.com:GrantsStreetGroup/$repo.git`,
+    `ssh://git@github.com/GrantsStreetGroup/$repo.git`,
     or
     `https://github.com/GrantsStreetGroup/$repo.git`.
 
