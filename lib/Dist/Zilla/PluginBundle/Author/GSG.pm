@@ -72,11 +72,12 @@ sub configure {
 
         [ 'ChangelogFromGit::CPAN::Changes' => {
             file_name    => 'CHANGES',
-            tag_regexp   => '\b(v\d+\.\d+\.\d+(?:\.\d+)*)\b',
+            # Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
+            tag_regexp   => '\b(v?\d+\.\d+(?:\.\d+)*)\b',
             copy_to_root => 0,
         } ],
 
-        [ 'Git::NextVersion' => {
+        [ 'GSG::Git::NextVersion' => {
             first_version  => 'v0.0.1',
             version_regexp => '\b(v\d+\.\d+\.\d+)\b',
         } ],
@@ -177,7 +178,9 @@ sub _find_github_remote {
 
         next unless ( $direction || '' ) eq 'push';
 
-        if ( $url =~ m{(?: :// | \@ ) (?: [\w\-\.]+\. )? github\.com\/ }ix ) {
+        if ( $url
+            =~ m{(?: :// | \@ ) (?: [\w\-\.]+\. )? github\.com [/:] }ix )
+        {
             croak "Multiple git remotes found for GitHub" if defined $remote;
             $remote = $name;
         }
@@ -227,6 +230,25 @@ sub _get_credentials {
 
     return ( $creds->{login}, $creds->{pass}, $otp );
 }
+
+__PACKAGE__->meta->make_immutable;
+
+package # hide from the CPAN
+    Dist::Zilla::Plugin::GSG::Git::NextVersion;
+use Moose;
+BEGIN { extends 'Dist::Zilla::Plugin::Git::NextVersion' }
+
+before 'provide_version' => sub {
+    if ( my $v = $ENV{V} ) {
+        $v =~ s/^v//;
+        my @v = split /\./, $v;
+
+        Carp::croak "Invalid version '$ENV{V}' in \$ENV{V}"
+            if @v > 3 or grep /\D/, @v;
+
+        $ENV{V} = sprintf "v%d.%d.%d", @v, 0, 0, 0;
+    }
+};
 
 __PACKAGE__->meta->make_immutable;
 1;
@@ -288,11 +310,13 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
-    [ChangelogFromGit]
-    tag_regexp = \b(v\d+\.\d+\.\d+(?:\.\d+)*)\b
-    exclude_message = (?x: ^Merge \s+ (?: pull \s+ request | (?:remote-tracking\s+)? branch ) \b )
+    [ChangelogFromGit::CPAN::Changes]
+    file_name    = CHANGES
+    ; Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
+    tag_regexp   = \b(v?\d+\.\d+(?:\.\d+)*)\b
+    copy_to_root = 0
 
-    [Git::NextVersion]
+    [Git::NextVersion] # plus magic to sanitize versions from the environment
     first_version  = v0.0.1
     version_regexp = \b(v\d+\.\d+\.\d+)(?:\.\d+)*\b
 
@@ -547,7 +571,8 @@ and push to the remote.
 =item Your git remote must be a format GitHub::UploadRelease understands
 
 Either
-C<ssh://git@github.com/GrantsStreetGroup/$repo.git>
+C<git@github.com:GrantsStreetGroup/$repo.git>,
+C<ssh://git@github.com/GrantsStreetGroup/$repo.git>,
 or
 C<https://github.com/GrantsStreetGroup/$repo.git>.
 
