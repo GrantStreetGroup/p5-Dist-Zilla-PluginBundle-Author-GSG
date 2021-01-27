@@ -53,7 +53,6 @@ sub configure {
             semantic_version => 1,
         } ],
         'Prereqs::FromCPANfile',
-        'ReadmeAnyFromPod',
         $meta_provides,
 
         [ 'StaticInstall' => $self->config_slice( {
@@ -70,6 +69,7 @@ sub configure {
             config_plugin      => [ '@Default', 'Contributors' ]
         } ],
 
+        'ReadmeAnyFromPod',
         [ 'ChangelogFromGit::CPAN::Changes' => {
             file_name    => 'CHANGES',
             # Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
@@ -295,7 +295,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [MetaJSON]
     [OurPkgVersion]
     [Prereqs::FromCPANfile]
-    [ReadmeAnyFromPod]
     [$meta_provides] # defaults to MetaProvides::Package
 
     [StaticInstall]
@@ -310,6 +309,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
+    [ReadmeAnyFromPod]
     [ChangelogFromGit::CPAN::Changes]
     file_name    = CHANGES
     ; Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
