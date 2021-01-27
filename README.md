@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.1.3
+version v0.1.4
 
 # SYNOPSIS
 
@@ -46,7 +46,6 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [MetaJSON]
     [OurPkgVersion]
     [Prereqs::FromCPANfile]
-    [ReadmeAnyFromPod]
     [$meta_provides] # defaults to MetaProvides::Package
 
     [StaticInstall]
@@ -61,6 +60,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
 
+    [ReadmeAnyFromPod]
     [ChangelogFromGit::CPAN::Changes]
     file_name    = CHANGES
     ; Support both old 0.90 versioning and new v1.2.3 semantic versioning formats
@@ -329,7 +329,7 @@ Grant Street Group <developers@grantstreet.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2019 - 2020 by Grant Street Group.
+This software is Copyright (c) 2019 - 2021 by Grant Street Group.
 
 This is free software, licensed under:
 
