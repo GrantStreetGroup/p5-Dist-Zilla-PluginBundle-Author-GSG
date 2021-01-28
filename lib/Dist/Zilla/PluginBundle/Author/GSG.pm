@@ -246,7 +246,8 @@ before 'provide_version' => sub {
         Carp::croak "Invalid version '$ENV{V}' in \$ENV{V}"
             if @v > 3 or grep /\D/, @v;
 
-        $ENV{V} = sprintf "v%d.%d.%d", @v, 0, 0, 0;
+        # perl v5.22+ complain about too many arguments to printf
+        $ENV{V} = sprintf "v%d.%d.%d", (@v, 0, 0, 0)[0..2];
     }
 };
 
