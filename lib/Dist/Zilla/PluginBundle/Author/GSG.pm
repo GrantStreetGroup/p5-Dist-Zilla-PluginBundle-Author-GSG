@@ -304,7 +304,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [ExecDir]
     dir = script    # in addition to bin/ for StaticInstall compatibility
 
-    [Pod::Weaver]
+    [PodWeaver]
     replacer = replace_with_comment
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
