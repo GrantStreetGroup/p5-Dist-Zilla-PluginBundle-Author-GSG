@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.1.4
+version v0.1.5
 
 # SYNOPSIS
 
@@ -55,7 +55,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [ExecDir]
     dir = script    # in addition to bin/ for StaticInstall compatibility
 
-    [Pod::Weaver]
+    [PodWeaver]
     replacer = replace_with_comment
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
@@ -220,7 +220,7 @@ might look like this:
         carton exec perl -Ilib -MFile::ShareDir=dist_dir -e \
             'print eval { dist_dir("Dist-Zilla-PluginBundle-Author-GSG") } || "share"' )
 
-    include $(SHARE_DIR)/Makefile
+    include $(SHARE_DIR)/Makefile.inc
 
     # Copy the SHARE_DIR Makefile over this one:
     # Making it .PHONY will force it to copy even if this one is newer.
