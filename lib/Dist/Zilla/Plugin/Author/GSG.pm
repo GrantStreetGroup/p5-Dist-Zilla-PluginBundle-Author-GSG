@@ -27,10 +27,14 @@ sub _BUILDARGS {
 
         # We need v1.7.5 of git in order to get all the flags
         # necessary to do all the things.
-        my $git_version = $git->version || 0;
+        my $full_git_version = $git->version;
+
+        # Apple says: "2.21.1 (Apple Git-122.3)" so we need the regex
+        my ($git_version) = $full_git_version =~ /(\d+(?:\.\d+)+)/;
+
         $args->{zilla}
             ->log_fatal( "[Author::GSG] Git 1.7.5 or greater is required"
-                . ", only have $git_version." )
+                . ", only have $full_git_version." )
             if $git_version < version->parse(v1.7.5);
 
         local $@;

@@ -31,18 +31,23 @@ delete $ENV{V}; # because it could mess up Git::NextVersion
     my $git = Git::Wrapper->new('.');
     plan skip_all => "No Git!" unless $git->has_git_in_path;
 
-    my $version = $git->version;
-    diag "Have git $version";
+    my $git_version = $git->version;
+    diag "Have git $git_version";
+
+    # Apple says: "2.21.1 (Apple Git-122.3)"
+    if ( $git_version =~ /(\d+(?:\.\d+)+)/ ) {
+        $git_version = $1;
+    }
 
     # This should make us skip tests if the version is unparsable
     # but I actually want to see what the version is on cpantesters
     # causing the "Invalid version format" error.
     # http://www.cpantesters.org/cpan/report/10799c66-614d-11eb-8a9e-254c33959232
-    #$version = do { local $@; eval { local $SIG{__DIE__};
-    #        version->parse($version) } } || 'v0';
+    #$git_version = do { local $@; eval { local $SIG{__DIE__};
+    #        version->parse($git_version) } } || 'v0';
 
-    plan skip_all => "Git is too old: $version"
-        if $version < version->parse(v1.7.5);
+    plan skip_all => "Git is too old: $git_version"
+        if $git_version < version->parse(v1.7.5);
 }
 
 my $year   = 1900 + (localtime)[5];
