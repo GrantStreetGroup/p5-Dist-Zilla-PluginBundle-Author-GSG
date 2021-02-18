@@ -30,7 +30,7 @@ sub _BUILDARGS {
         my $full_git_version = $git->version;
 
         # Apple says: "2.21.1 (Apple Git-122.3)" so we need the regex
-        my ($git_version) = $full_git_version =~ /(\d+(?:\.\d+)+)/;
+        my ($git_version) = $full_git_version =~ /^(\d+(?:\.\d+)+)/;
 
         $args->{zilla}
             ->log_fatal( "[Author::GSG] Git 1.7.5 or greater is required"

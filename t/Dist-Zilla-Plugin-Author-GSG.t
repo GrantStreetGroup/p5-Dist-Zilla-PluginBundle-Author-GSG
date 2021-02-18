@@ -26,7 +26,7 @@ my $dir = File::Temp->newdir("dzpag-XXXXXXXXX");
     diag "Have git $git_version";
 
     # Apple says: "2.21.1 (Apple Git-122.3)"
-    if ( $git_version =~ /(\d+(?:\.\d+)+)/ ) {
+    if ( $git_version =~ /^(\d+(?:\.\d+)+)/ ) {
         $git_version = $1;
     }
 
