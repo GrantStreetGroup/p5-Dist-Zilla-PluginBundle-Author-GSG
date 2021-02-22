@@ -30,12 +30,12 @@ sub _BUILDARGS {
         my $full_git_version = $git->version;
 
         # Apple says: "2.21.1 (Apple Git-122.3)" so we need the regex
-        my ($git_version) = $full_git_version =~ /^(\d+(?:\.\d+)+)/;
+        my ($git_version) = $full_git_version =~ /^(\d+(?:\.\d+)*)/;
 
         $args->{zilla}
             ->log_fatal( "[Author::GSG] Git 1.7.5 or greater is required"
                 . ", only have $full_git_version." )
-            if $git_version < version->parse(v1.7.5);
+            if version->parse("v$git_version") < v1.7.5;
 
         local $@;
         my ( $commit, $date ) = eval { local $SIG{__DIE__};

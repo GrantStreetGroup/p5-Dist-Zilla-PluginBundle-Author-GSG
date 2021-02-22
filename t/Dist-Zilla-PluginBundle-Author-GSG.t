@@ -35,7 +35,7 @@ delete $ENV{V}; # because it could mess up Git::NextVersion
     diag "Have git $git_version";
 
     # Apple says: "2.21.1 (Apple Git-122.3)"
-    if ( $git_version =~ /^(\d+(?:\.\d+)+)/ ) {
+    if ( $git_version =~ /^(\d+(?:\.\d+)*)/ ) {
         $git_version = $1;
     }
 
@@ -47,7 +47,7 @@ delete $ENV{V}; # because it could mess up Git::NextVersion
     #        version->parse($git_version) } } || 'v0';
 
     plan skip_all => "Git is too old: $git_version"
-        if $git_version < version->parse(v1.7.5);
+        if version->parse("v$git_version") < v1.7.5;
 }
 
 my $year   = 1900 + (localtime)[5];
