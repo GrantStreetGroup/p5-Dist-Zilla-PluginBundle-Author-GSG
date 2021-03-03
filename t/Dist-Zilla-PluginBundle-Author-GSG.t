@@ -218,7 +218,7 @@ subtest 'NextVersion' => sub {
     is $tzil->version, 'v0.0.1', 'First version is v0.0.1';
 
     my ($version_plugin)
-        = $tzil->plugin_named('@Author::GSG/GSG::Git::NextVersion');
+        = $tzil->plugin_named('@Author::GSG/Author::GSG::Git::NextVersion');
     my ($changelog_plugin)
         = $tzil->plugin_named('@Author::GSG/ChangelogFromGit::CPAN::Changes');
     my ($git_tag_plugin)

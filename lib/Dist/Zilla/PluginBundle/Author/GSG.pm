@@ -77,7 +77,7 @@ sub configure {
             copy_to_root => 0,
         } ],
 
-        [ 'GSG::Git::NextVersion' => {
+        [ 'Author::GSG::Git::NextVersion' => {
             first_version  => 'v0.0.1',
             version_regexp => '\b(v\d+\.\d+\.\d+)\b',
         } ],
@@ -234,7 +234,7 @@ sub _get_credentials {
 __PACKAGE__->meta->make_immutable;
 
 package # hide from the CPAN
-    Dist::Zilla::Plugin::GSG::Git::NextVersion;
+    Dist::Zilla::Plugin::Author::GSG::Git::NextVersion;
 use Moose;
 BEGIN { extends 'Dist::Zilla::Plugin::Git::NextVersion' }
 
