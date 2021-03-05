@@ -20,6 +20,7 @@ sub mvp_multivalue_args { qw(
     test_compile_module_finder
     test_compile_script_finder
     test_compile_switch
+    dont_munge
 ) }
 
 sub configure {
@@ -45,11 +46,19 @@ sub configure {
 
     $mm->[2]->{eumm_version} = '7.1101';
 
+    my $name = $self->name;
+
     $self->add_plugins(
         'Author::GSG',
 
+        [ 'FileFinder::Filter' => 'MungeableFiles' => {
+            finder => [ ':InstallModules', ':PerlExecFiles' ],
+            %{ $self->config_slice({ dont_munge => 'skip' }) }
+        }],
+
         'MetaJSON',
         [ 'OurPkgVersion' => {
+            finder           => [ "$name/MungeableFiles" ],
             semantic_version => 1,
         } ],
         'Prereqs::FromCPANfile',
@@ -64,6 +73,7 @@ sub configure {
         [ 'ExecDir' => { dir => 'script' } ],
 
         [ 'PodWeaver' => {
+            finder             => [ "$name/MungeableFiles" ],
             replacer           => 'replace_with_comment',
             post_code_replacer => 'replace_with_nothing',
             config_plugin      => [ '@Default', 'Contributors' ]
@@ -252,6 +262,7 @@ before 'provide_version' => sub {
 };
 
 __PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
