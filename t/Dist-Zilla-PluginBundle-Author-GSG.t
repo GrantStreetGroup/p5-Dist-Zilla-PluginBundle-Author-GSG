@@ -564,7 +564,7 @@ subtest "Pass through MungeableFiles params" => sub {
                 'source/dist.ini' => dist_ini(
                     { name => 'Test-Compile' },
                     [   '@Author::GSG' => {
-                            dont_munge => [ qr/.*one-off.*/ ],
+                            dont_munge => [ qr/one-off/ ],
                         },
                     ],
                 ),
