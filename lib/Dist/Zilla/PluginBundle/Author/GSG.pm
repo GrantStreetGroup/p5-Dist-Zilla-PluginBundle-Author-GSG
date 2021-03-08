@@ -452,6 +452,17 @@ Passed to L<Dist::Zilla::Plugin::Git::GatherDir/exclude_match>.
 All options for L<Dist::Zilla::Plugin::Test::Compile> should be supported
 with the C<test_compile_> prefix.
 
+=item dont_munge
+
+    [@Author::GSG]
+    dont_munge = (?^:one-off)
+    dont_munge = (?^:docs/.*.txt)
+
+Passed to L<Dist::Zilla::Plugin::FileFinder::Filter> as c<skip>.
+
+This plugin gets passed to L<Dist::Zilla::Plugin::OurPkgVersion> and
+L<Dist::Zilla::Plugin::PodWeaver> as C<finder> to filter matches.
+
 =back
 
 =head1 Setting up a new dist
