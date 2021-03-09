@@ -320,6 +320,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     dont_munge = (?^:bin/throw_away_scripts)
 
     [PodWeaver]
+    finder     = :MungeableFiles
     replacer = replace_with_comment
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
