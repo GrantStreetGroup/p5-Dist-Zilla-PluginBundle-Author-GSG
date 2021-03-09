@@ -305,6 +305,8 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [Author::GSG]
 
     [ FileFinder::Filter / MungeableFiles ]
+    finder => :InstallModules
+    finder => :PerlExecFiles
     ; dont_munge = (?^:bin) # can be used multiple times. passed in as "skip"
 
     [MetaJSON]
