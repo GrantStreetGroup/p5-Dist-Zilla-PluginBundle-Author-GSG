@@ -317,7 +317,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [ExecDir]
     dir = script    # in addition to bin/ for StaticInstall compatibility
 
-    [@Author::GSG]
     dont_munge = (?^:bin/throw_away_scripts)
 
     [PodWeaver]
