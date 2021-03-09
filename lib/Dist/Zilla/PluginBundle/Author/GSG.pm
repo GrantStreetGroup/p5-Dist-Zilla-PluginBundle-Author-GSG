@@ -304,6 +304,9 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     ; The defaults for author and license come from
     [Author::GSG]
 
+    [ FileFinder::Filter / MungeableFiles ]
+    ; dont_munge = (?^:bin) # can be used multiple times. passed in as "skip"
+
     [MetaJSON]
     [OurPkgVersion]
     finder = :MungableFiles
@@ -316,8 +319,6 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [ExecDir]
     dir = script    # in addition to bin/ for StaticInstall compatibility
-
-    dont_munge = (?^:bin/throw_away_scripts)
 
     [PodWeaver]
     finder     = :MungeableFiles
