@@ -316,6 +316,9 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [ExecDir]
     dir = script    # in addition to bin/ for StaticInstall compatibility
 
+    [@Author::GSG]
+    dont_munge = (?^:bin/throw_away_scripts)
+
     [PodWeaver]
     replacer = replace_with_comment
     post_code_replacer = replace_with_nothing
@@ -458,7 +461,8 @@ with the C<test_compile_> prefix.
     dont_munge = (?^:one-off)
     dont_munge = (?^:docs/.*.txt)
 
-Passed to L<Dist::Zilla::Plugin::FileFinder::Filter> as c<skip>.
+Passed to L<Dist::Zilla::Plugin::FileFinder::Filter> as c<skip> for the
+C<MungableFiles> plugin.
 
 This plugin gets passed to L<Dist::Zilla::Plugin::OurPkgVersion> and
 L<Dist::Zilla::Plugin::PodWeaver> as C<finder> to filter matches.
