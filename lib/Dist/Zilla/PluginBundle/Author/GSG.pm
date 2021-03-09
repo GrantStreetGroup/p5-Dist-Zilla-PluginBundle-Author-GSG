@@ -306,6 +306,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
 
     [MetaJSON]
     [OurPkgVersion]
+    finder = :MungableFiles
     [Prereqs::FromCPANfile]
     [$meta_provides] # defaults to MetaProvides::Package
 
