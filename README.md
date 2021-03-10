@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.1.5
+version v0.2.0
 
 # SYNOPSIS
 
@@ -43,8 +43,14 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     ; The defaults for author and license come from
     [Author::GSG]
 
+    [ FileFinder::Filter / MungeableFiles ]
+    finder => :InstallModules
+    finder => :PerlExecFiles
+    ; dont_munge = (?^:bin) # can be used multiple times. passed in as "skip"
+
     [MetaJSON]
     [OurPkgVersion]
+    finder = :MungableFiles
     [Prereqs::FromCPANfile]
     [$meta_provides] # defaults to MetaProvides::Package
 
@@ -56,6 +62,7 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     dir = script    # in addition to bin/ for StaticInstall compatibility
 
     [PodWeaver]
+    finder     = :MungeableFiles
     replacer = replace_with_comment
     post_code_replacer = replace_with_nothing
     config_plugin = [ @Default, Contributors ]
@@ -188,6 +195,18 @@ as well as incrementing a more strict `semver`.
 
     All options for [Dist::Zilla::Plugin::Test::Compile](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3ATest%3A%3ACompile) should be supported
     with the `test_compile_` prefix.
+
+- dont\_munge
+
+        [@Author::GSG]
+        dont_munge = (?^:one-off)
+        dont_munge = (?^:docs/.*.txt)
+
+    Passed to [Dist::Zilla::Plugin::FileFinder::Filter](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AFileFinder%3A%3AFilter) as c&lt;skip> for the
+    `MungableFiles` plugin.
+
+    This plugin gets passed to [Dist::Zilla::Plugin::OurPkgVersion](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AOurPkgVersion) and
+    [Dist::Zilla::Plugin::PodWeaver](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3APodWeaver) as `finder` to filter matches.
 
 # Setting up a new dist
 
