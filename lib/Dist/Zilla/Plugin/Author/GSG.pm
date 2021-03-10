@@ -12,6 +12,15 @@ use namespace::autoclean;
 
 before 'BUILDARGS' => \&_BUILDARGS;
 
+sub _git_version_ok {
+    my ($git_version) = @_;
+
+    # Apple says: "2.21.1 (Apple Git-122.3)" so we need the regex
+    $git_version = $1 if $git_version =~ /^(\d+(?:\.\d+)*)/;
+
+    return version->parse("v$git_version") >= v1.7.5;
+}
+
 # Use a named sub for Devel::Cover
 sub _BUILDARGS {
     my ($class, $args) = @_;
@@ -27,11 +36,12 @@ sub _BUILDARGS {
 
         # We need v1.7.5 of git in order to get all the flags
         # necessary to do all the things.
-        my $git_version = $git->version || 0;
+        my $git_version = $git->version;
+
         $args->{zilla}
             ->log_fatal( "[Author::GSG] Git 1.7.5 or greater is required"
                 . ", only have $git_version." )
-            if $git_version < version->parse(v1.7.5);
+            unless _git_version_ok($git_version);
 
         local $@;
         my ( $commit, $date ) = eval { local $SIG{__DIE__};
