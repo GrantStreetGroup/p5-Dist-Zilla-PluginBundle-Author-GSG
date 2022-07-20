@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.2.0
+version v0.2.1
 
 # SYNOPSIS
 
@@ -348,7 +348,7 @@ Grant Street Group <developers@grantstreet.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2019 - 2021 by Grant Street Group.
+This software is Copyright (c) 2019 - 2022 by Grant Street Group.
 
 This is free software, licensed under:
 
