@@ -12,6 +12,10 @@ with qw(
 );
 use namespace::autoclean;
 
+=for Pod::Coverage configure mvp_multivalue_args
+
+=cut
+
 sub mvp_multivalue_args { qw(
     exclude_filename
     exclude_match
@@ -123,6 +127,8 @@ sub configure {
         } ) ],
 
         'Test::ReportPrereqs',
+        'PodSyntaxTests',
+        'PodCoverageTests',
     );
 
     my ($gather_dir)
@@ -368,6 +374,8 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     ; test_compile_switch
 
     [Test::ReportPrereqs]
+    [PodSyntaxTests]
+    [PodCoverageTests]
 
 =head1 DESCRIPTION
 

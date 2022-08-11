@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.2.1
+version v0.3.0
 
 # SYNOPSIS
 
@@ -107,6 +107,8 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     ; test_compile_switch
 
     [Test::ReportPrereqs]
+    [PodSyntaxTests]
+    [PodCoverageTests]
 
 # DESCRIPTION
 
