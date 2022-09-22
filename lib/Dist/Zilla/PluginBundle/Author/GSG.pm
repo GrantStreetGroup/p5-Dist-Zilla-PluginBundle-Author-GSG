@@ -384,8 +384,8 @@ public distributions of modules as well as trying to make it easy for
 other folks to contribute.
 
 The C<share_dir> for this module includes GSG standard files to include
-with open source modules.  Things like a standard Makefile,
-a contributing guide, and a MANIFEST.SKIP that should work with this Plugin.
+with open source modules.  Things like a standard Makefile
+and a contributing guide.
 See the L</update> Makefile target for details.
 
 The expected workflow for a module using this code is that after following
@@ -571,7 +571,7 @@ Requires installing the C<develop> cpanfile dependencies to work.
 
 The files in this variable are copied from this PluginBundle's
 
-Currently includes C<CONTRIBUTING.md> and C<MANIFEST.SKIP>.
+Currently includes C<CONTRIBUTING.md>.
 
 =back
 

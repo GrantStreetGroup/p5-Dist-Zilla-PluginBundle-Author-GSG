@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.3.0
+version v0.3.1
 
 # SYNOPSIS
 
@@ -117,8 +117,8 @@ public distributions of modules as well as trying to make it easy for
 other folks to contribute.
 
 The `share_dir` for this module includes GSG standard files to include
-with open source modules.  Things like a standard Makefile,
-a contributing guide, and a MANIFEST.SKIP that should work with this Plugin.
+with open source modules.  Things like a standard Makefile
+and a contributing guide.
 See the ["update"](#update) Makefile target for details.
 
 The expected workflow for a module using this code is that after following
@@ -296,7 +296,7 @@ Some of the targets that are included in the Makefile are:
 
         The files in this variable are copied from this PluginBundle's
 
-        Currently includes `CONTRIBUTING.md` and `MANIFEST.SKIP`.
+        Currently includes `CONTRIBUTING.md`.
 
 - $(CPANFILE\_SNAPSHOT)
 
