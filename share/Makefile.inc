@@ -57,7 +57,7 @@ testcoverage : $(CPANFILE_SNAPSHOT)
 	$(CARTON) exec -- cover -test -ignore . -select ^lib
 
 disttest: $(DZIL)
-	$(CARTON) exec -- dzil test --all
+	$(CARTON) exec -- dzil test --verbose --all
 
 $(MAKEFILE_TARGET): $(MAKEFILE_SHARE)
 	install -m 644 $< $@
