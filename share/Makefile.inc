@@ -70,7 +70,7 @@ realclean: clean distclean
 	rm -rf local
 
 distclean:
-	test -e "$(DZIL)" && $(CARTON) exec dzil clean
+	test ! -e "$(DZIL)" || $(CARTON) exec dzil clean
 
 update: README.md LICENSE.txt $(EXTRA_UPDATES)
 	@echo Everything is up to date
