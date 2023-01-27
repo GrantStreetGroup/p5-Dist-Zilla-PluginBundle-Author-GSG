@@ -45,8 +45,36 @@ endif
 
 .PHONY : test disttest clean distclean realclean develop carton
 
+RUN_TESTS=prove -lfr t
+
+# If we have a Makefile.PL, we do some things differently.
+ifneq (,$(wildcard Makefile.PL))
+ifeq (Makefile,$(MAKEFILE_TARGET))
+$(error This Makefile should be named something else when using Makefile.PL)
+endif
+RUN_TESTS=$(MAKE) test
+EXTRA_CLEAN=Makefile Makefile.old
+
+test: build
+
+build: Makefile
+	$(CARTON) exec -- $(MAKE) all
+
+# If we have dzil available, we can make sure Makefile.PL is up-to-date
+ifneq (,$(wildcard $(DZIL)))
+EXTRA_UPDATES += Makefile.PL
+# Make sure this version is sync'd in t/*
+Makefile.PL: $(MAIN_MODULE) dist.ini $(DZIL) $(wildcard *.xs)
+	V=0.0.1 $(CARTON) exec dzil run sh -c "cp Makefile.PL ${CURDIR}/$@"
+endif
+
+Makefile: Makefile.PL
+	$(CARTON) exec -- perl Makefile.PL
+
+endif # Makefile.PL exists
+
 test : $(CPANFILE_SNAPSHOT)
-	@nice $(CARTON) exec prove -lfr t
+	@nice $(CARTON) exec ${RUN_TESTS}
 
 # This target requires that you add 'requires "Devel::Cover";'
 # to the cpanfile and then run "carton" to install it.
@@ -61,7 +89,7 @@ $(MAKEFILE_TARGET): $(MAKEFILE_SHARE)
 	@echo $(MAKEFILE_TARGET) updated>&2
 
 clean: distclean
-	rm -rf .build dzpbag-*
+	rm -rf .build dzpbag-* blib $(EXTRA_CLEAN)
 
 realclean: clean distclean
 	rm -rf local
@@ -79,7 +107,7 @@ LICENSE.txt: dist.ini $(DZIL)
 	$(CARTON) exec dzil run sh -c "install -m 644 LICENSE ${CURDIR}/$@"
 
 .SECONDEXPANSION:
-$(CONTRIB): $(SHARE_DIR)/$$(@)
+$(CONTRIB): $(SHARE_DIR)/$$(@F)
 	install -m 644 $< $@
 
 $(CPANFILE_SNAPSHOT): $(CARTON) cpanfile
