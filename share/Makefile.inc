@@ -38,7 +38,9 @@ ifneq ($(SHARE_DIR),)
 	MAKEFILE_SHARE  := $(wildcard $(SHARE_DIR)/Makefile*)
 
 # with a special case for when we're in the PluginBundle
-ifeq ($(MAKEFILE_TARGET),$(MAKEFILE_SHARE))
+# that checks whether any of the Makefiles in the sharedir
+# are the target we want to update.
+ifneq (,$(findstring $(MAKEFILE_TARGET),$(MAKEFILE_SHARE)))
 	MAKEFILE_TARGET :=
 endif
 endif
