@@ -525,8 +525,8 @@ adding the C<on 'develop'> dependency to your cpanfile as described above.
 
 If you want to override the Makefile included with this Plugin
 but still want to use some of the targets in it,
-you could replace the C<Makefile> target in this example with your own targets,
-and document running the initial C<carton install> manually.
+you can rename it to something such as C<Makefile.inc>
+and include it from your C<Makefile>.
 
 The Makefile that comes in this PluginBundle's C<share_dir> has a many
 helpers to make development on a module supported by it easier.
@@ -550,6 +550,11 @@ so you will need to add it to the cpanfile temporarily for this target to work.
 
 Copies the C<Makefile.inc> included in this PluginBundle's C<share_dir>
 into your distribution.
+
+Actually the C<$(lastword $(MAKEFILE_LIST))>,
+so if you put the Makefile somewhere else,
+for example C<Makefile.inc> or C<ci/Makefile>,
+that will be the target.
 
 This should happen automatically through the magic of C<make>.
 

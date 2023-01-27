@@ -30,20 +30,17 @@ PERL_CARTON_PERL5LIB ?= $(PERL5LIB)
 CONTRIB              ?= CONTRIBUTING.md
 EXTRA_UPDATES        += $(CONTRIB)
 
-# If someone includes this Makefile, don't write the Makefile
-# target because otherwise we will overwrite their custom Makefile
-ifeq ($(SHARE_DIR),)
-	# Without a sharedir we don't know where to get the Makefile
-	MAKEFILE_TARGET := ""
-else ifeq ($(firstword $(MAKEFILE_LIST)),$(lastword $(MAKEFILE_LIST)))
-	MAKEFILE_TARGET := $(firstword $(MAKEFILE_LIST))
-else
-	MAKEFILE_TARGET := ""
+# Without a sharedir we don't know where to get the Makefile
+MAKEFILE_TARGET :=
+MAKEFILE_SHARE  :=
+ifneq ($(SHARE_DIR),)
+	MAKEFILE_TARGET := $(lastword $(MAKEFILE_LIST))
+	MAKEFILE_SHARE  := $(wildcard $(SHARE_DIR)/Makefile*)
+
+# with a special case for when we're in the PluginBundle
+ifeq ($(MAKEFILE_TARGET),$(MAKEFILE_SHARE))
+	MAKEFILE_TARGET :=
 endif
-ifeq ($(MAKEFILE_TARGET),)
-	MAKEFILE_SHARE := ""
-else
-	MAKEFILE_SHARE := $(wildcard $(SHARE_DIR)/Makefile*)
 endif
 
 .PHONY : test disttest clean distclean realclean develop carton
@@ -61,7 +58,7 @@ disttest: $(DZIL)
 
 $(MAKEFILE_TARGET): $(MAKEFILE_SHARE)
 	install -m 644 $< $@
-	@echo Makefile updated>&2
+	@echo $(MAKEFILE_TARGET) updated>&2
 
 clean: distclean
 	rm -rf .build dzpbag-*
