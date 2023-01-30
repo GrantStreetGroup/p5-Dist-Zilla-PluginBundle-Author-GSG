@@ -333,7 +333,7 @@ Generating the initial `Makefile.PL` can be done with:
     git rm -f Makefile && git commit -am"Switch to Makefile.PL"
 
 Which should copy the Makefile.PL from the dzil workspace into your
-repostitory.
+repository.
 
 Because this PluginBundle uses [Dist::Zilla::Plugin::OurPkgVersion](https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AOurPkgVersion),
 actually testing XS modules is a bit troublesome because they don't
