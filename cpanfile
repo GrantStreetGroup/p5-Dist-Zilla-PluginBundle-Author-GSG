@@ -14,6 +14,7 @@ requires 'Dist::Zilla::Role::LicenseProvider';
 
 requires 'Dist::Zilla::Plugin::Test::Compile', '2.055';
 requires 'Dist::Zilla::Plugin::Test::ReportPrereqs';
+requires 'Dist::Zilla::Plugin::HasVersionTests';
 
 requires 'Dist::Zilla::Plugin::StaticInstall';
 
