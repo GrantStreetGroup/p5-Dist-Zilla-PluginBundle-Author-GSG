@@ -127,6 +127,7 @@ sub configure {
         } ) ],
 
         'Test::ReportPrereqs',
+        'HasVersionTests',
         'PodSyntaxTests',
         'PodCoverageTests',
     );
@@ -374,6 +375,7 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     ; test_compile_switch
 
     [Test::ReportPrereqs]
+    [HasVersionTests]
     [PodSyntaxTests]
     [PodCoverageTests]
 
