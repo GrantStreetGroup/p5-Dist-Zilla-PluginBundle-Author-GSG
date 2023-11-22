@@ -53,10 +53,10 @@ on test => sub {
     requires 'Test::Fatal';
     requires 'Test::More';
     requires 'Test::Pod', '1.14';
-    requires 'Test::Strict';
     requires 'Time::Piece';
 };
 
 on develop => sub {
     requires 'Dist::Zilla::Plugin::Bootstrap::lib';
+    requires 'Test::Strict';
 };
