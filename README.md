@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.5.1
+version v0.5.3
 
 # SYNOPSIS
 
