@@ -99,13 +99,13 @@ realclean: clean distclean
 distclean:
 	test ! -e "$(DZIL)" || $(CARTON) exec dzil clean
 
-update: touchfiles do-update
+forceupdate: touchfiles update
 
 touchfiles: $(DZIL)
 	touch -c $(MAIN_MODULE) $(MAKEFILE_SHARE) $(addprefix $(SHARE_DIR)/, $(CONTRIB))
 
-do-update: README.md LICENSE.txt $(EXTRA_UPDATES)
-	@echo Everything is up to date
+update: README.md LICENSE.txt $(EXTRA_UPDATES)
+	@echo "Everything is up to date, use 'make forceupdate' to override"
 
 README.md: $(MAIN_MODULE) dist.ini $(DZIL)
 	$(CARTON) exec dzil run sh -c "pod2markdown $< > ${CURDIR}/$@"
