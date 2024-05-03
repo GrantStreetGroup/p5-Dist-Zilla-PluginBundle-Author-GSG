@@ -99,7 +99,12 @@ realclean: clean distclean
 distclean:
 	test ! -e "$(DZIL)" || $(CARTON) exec dzil clean
 
-update: README.md LICENSE.txt $(EXTRA_UPDATES)
+update: touchfiles do-update
+
+touchfiles: $(DZIL)
+	touch -c $(MAIN_MODULE) $(MAKEFILE_SHARE) $(addprefix $(SHARE_DIR)/, $(CONTRIB))
+
+do-update: README.md LICENSE.txt $(EXTRA_UPDATES)
 	@echo Everything is up to date
 
 README.md: $(MAIN_MODULE) dist.ini $(DZIL)
