@@ -634,6 +634,14 @@ when Dist::Zilla builds the dist.
  # ABSTRACT: Does things for me
  our $VERSION = 'v0.0.1'; # VERSION
 
+For XS modules, you will also need to disable C<static_install_mode>
+and exclude the C<Makefile.PL> from the dist,
+as the C<MakeMaker> Plugin will want to generate one with the correct version.
+
+    [@Author::GSG]
+    static_install_mode = off
+    exclude_filename = Makefile.PL
+
 =head2 Cutting a release
 
     carton exec -- dzil release
