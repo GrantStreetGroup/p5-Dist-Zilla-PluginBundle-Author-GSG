@@ -64,6 +64,7 @@ sub configure {
         [ 'OurPkgVersion' => {
             finder           => [ "$name/MungeableFiles" ],
             semantic_version => 1,
+            overwite         => 1,
         } ],
         'Prereqs::FromCPANfile',
         $meta_provides,
@@ -319,6 +320,8 @@ Some of which comes from L<Dist::Zilla::Plugin::Author::GSG>.
     [MetaJSON]
     [OurPkgVersion]
     finder = :MungableFiles
+    semantic_version = 1
+    overwite         = 1
     [Prereqs::FromCPANfile]
     [$meta_provides] # defaults to MetaProvides::Package
 
@@ -621,15 +624,23 @@ actually testing XS modules is a bit troublesome because they don't
 have a C<$VERSION> available.
 The above command will generate the C<Makefile.PL> with an embedded
 version of C<v0.0.1> which can be used in your tests to work around this.
-First you need to add C<use vars '$VERSION';> to the C<.pm> files that
-C<bootstrap> the XS module, and then in your tests that load that module,
-before you C<use> the module to be tested,
-you can set a default version that will match the the one in the Makefile.PL.
-This default will be overridden when My::Module is loaded if it has a
-C<VERSION> of its own.
+To support this you need to add C<our $VERSION = 'v0.0.1'; # VERSION>
+to the C<.pm> files that C<bootstrap> the XS module.
+This default will be overwitten by the C<OurPkgVersion> Plugin
+when Dist::Zilla builds the dist.
 
-    BEGIN { $My::Module::VERSION = "v0.0.1" }
-    use My::Module;
+ package My::Module;
+
+ # ABSTRACT: Does things for me
+ our $VERSION = 'v0.0.1'; # VERSION
+
+For XS modules, you will also need to disable C<static_install_mode>
+and exclude the C<Makefile.PL> from the dist,
+as the C<MakeMaker> Plugin will want to generate one with the correct version.
+
+    [@Author::GSG]
+    static_install_mode = off
+    exclude_filename = Makefile.PL
 
 =head2 Cutting a release
 
