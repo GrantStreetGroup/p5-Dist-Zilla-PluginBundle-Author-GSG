@@ -372,9 +372,7 @@ subtest "OurPkgVersion Plugin Settings" => sub {
         "Correctly only have our MungableFiles Plugin"
     );
     ok $our_pkg_version_plugin->semantic_version, "Semantic Version is enabled";
-TODO: { local $TODO = "Have to spell correctly";
     ok $our_pkg_version_plugin->overwrite, "Overwrite is enabled";
-}
 };
 subtest "Override MetaProvides subclass" => sub {
     {   package Dist::Zilla::Plugin::MetaProvides::Fake;
