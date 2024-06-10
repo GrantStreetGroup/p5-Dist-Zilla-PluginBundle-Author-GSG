@@ -4,7 +4,7 @@ Dist::Zilla::PluginBundle::Author::GSG - Grant Street Group CPAN dists
 
 # VERSION
 
-version v0.5.4
+version v0.6.1
 
 # SYNOPSIS
 
@@ -51,6 +51,8 @@ Some of which comes from [Dist::Zilla::Plugin::Author::GSG](https://metacpan.org
     [MetaJSON]
     [OurPkgVersion]
     finder = :MungableFiles
+    semantic_version = 1
+    overwite         = 1
     [Prereqs::FromCPANfile]
     [$meta_provides] # defaults to MetaProvides::Package
 
@@ -341,15 +343,23 @@ actually testing XS modules is a bit troublesome because they don't
 have a `$VERSION` available.
 The above command will generate the `Makefile.PL` with an embedded
 version of `v0.0.1` which can be used in your tests to work around this.
-First you need to add `use vars '$VERSION';` to the `.pm` files that
-`bootstrap` the XS module, and then in your tests that load that module,
-before you `use` the module to be tested,
-you can set a default version that will match the the one in the Makefile.PL.
-This default will be overridden when My::Module is loaded if it has a
-`VERSION` of its own.
+To support this you need to add `our $VERSION = 'v0.0.1'; # VERSION`
+to the `.pm` files that `bootstrap` the XS module.
+This default will be overwitten by the `OurPkgVersion` Plugin
+when Dist::Zilla builds the dist.
 
-    BEGIN { $My::Module::VERSION = "v0.0.1" }
-    use My::Module;
+    package My::Module;
+
+    # ABSTRACT: Does things for me
+    our $VERSION = 'v0.0.1'; # VERSION
+
+For XS modules, you will also need to disable `static_install_mode`
+and exclude the `Makefile.PL` from the dist,
+as the `MakeMaker` Plugin will want to generate one with the correct version.
+
+    [@Author::GSG]
+    static_install_mode = off
+    exclude_filename = Makefile.PL
 
 ## Cutting a release
 
